@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using Application = System.Windows.Forms.Application;
 using ExcelApplication = Microsoft.Office.Interop.Excel.Application;
 
-namespace PayDay_Energosbyt
+namespace Edvin.Drive
 {
     public class MySqlOperations
     {
