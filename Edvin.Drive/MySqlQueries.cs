@@ -34,6 +34,26 @@ FROM price;";
         public string Select_Sotrudniki = $@"SELECT sotrudniki.ID_Sotrudnika, CONCAT(sotrudniki.Familiya,' ',sotrudniki.Imya,' ',sotrudniki.Otchestvo) AS 'Ф.И.О. Сотрудника',
 doljnosti.Name AS 'Наименование должности', sotrudniki.Telephone AS 'Контактный телефон'
 FROM sotrudniki INNER JOIN doljnosti ON sotrudniki.ID_Sotrudnika = doljnosti.ID_Dojnosti;";
+
+        public string Select_Act_Sdachi = $@"SELECT acts.ID_Act, acts.Date AS 'Дата документа', acts.ID_Dogovora AS 'Договор аренды, №',
+CONCAT(sotrudniki.Familiya,' ',sotrudniki.Imya,' ',sotrudniki.Otchestvo) AS 'Ф.И.О. Сотрудника',
+CONCAT(avtopark.Marka,' ',avtopark.Model,' ',avtopark.Gos_Znak) AS 'Автомобиль'
+FROM acts INNER JOIN sotrudniki ON acts.ID_Sotrudnika = sotrudniki.ID_Sotrudnika
+INNER JOIN dogovory ON acts.ID_Dogovora = dogovory.ID_Dogovora
+INNER JOIN avtopark ON acts.ID_Avto = avtopark.ID_Avto
+WHERE acts.Name = '1';";
+
+        public string Select_Act_Priemki = $@"SELECT acts.ID_Act, acts.Date AS 'Дата документа', acts.ID_Dogovora AS 'Договор аренды, №',
+CONCAT(sotrudniki.Familiya,' ',sotrudniki.Imya,' ',sotrudniki.Otchestvo) AS 'Ф.И.О. Сотрудника',
+CONCAT(avtopark.Marka,' ',avtopark.Model,' ',avtopark.Gos_Znak) AS 'Автомобиль'
+FROM acts INNER JOIN sotrudniki ON acts.ID_Sotrudnika = sotrudniki.ID_Sotrudnika
+INNER JOIN dogovory ON acts.ID_Dogovora = dogovory.ID_Dogovora
+INNER JOIN avtopark ON acts.ID_Avto = avtopark.ID_Avto
+WHERE acts.Name = '0';";
         //Select
+
+        //Insert
+        public string Insert_Doljnosti = $@"INSERT INTO doljnosti (Name) VALUES (@Value1);";
+        //Insert
     }
 }
