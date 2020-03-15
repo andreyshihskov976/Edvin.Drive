@@ -70,7 +70,13 @@ WHERE prava.ID_Clienta IS NULL;";
 
         public string Select_Sotrudniki_ID = $@"SELECT sotrudniki.ID_Sotrudnika FROM sotrudniki WHERE CONCAT(sotrudniki.Familiya, ' ', sotrudniki.Imya, ' ', sotrudniki.Otchestvo) = @Value1;";
 
+        public string Select_Avtopark_ComboBox = $@"SELECT CONCAT(avtopark.Marka, ' ',avtopark.Model,' ',avtopark.Gos_Znak) FROM avtopark;";
+
+        public string Select_Avtopark_ID = $@"SELECT avtopark.ID_Avto FROM avtopark WHERE CONCAT(avtopark.Marka, ' ',avtopark.Model,' ',avtopark.Gos_Znak) = @Value1;";
+
         public string Select_Prava_Exists = $@"SELECT EXISTS(SELECT * FROM prava WHERE prava.ID_Clienta = @ID);";
+
+        public string Select_Stoimost = $@"SELECT price.Stoimost-price.Skidka/100 FROM price INNER JOIN avtopark ON avtopark.ID_Price = price.ID_Price WHERE avtopark.ID_Avto = @ID;";
         //Select
 
         //Insert
@@ -85,6 +91,8 @@ WHERE prava.ID_Clienta IS NULL;";
         public string Insert_Clienty = $@"INSERT INTO clienty (Familiya, Imya, Otchestvo, Telephone, Email, Nom_Pass, Ident_Nom) VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7);";
 
         public string Insert_Prava = $@"INSERT INTO prava (ID_Clienta, Nom_VodPrav, AM, A1, A, B, C, D) VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7, @Value8);";
+
+        public string Insert_Dogovory = $@"INSERT INTO dogovory (ID_Sotrudnika, ID_Clienta, N_Arendy, K_Arendy, Summa, ID_Avto) VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6);";
         //Insert
 
         //Update
@@ -99,6 +107,8 @@ WHERE prava.ID_Clienta IS NULL;";
         public string Update_Clienty = $@"UPDATE clienty SET Familiya = @Value1, Imya= @Value2, Otchestvo = @Value3, Telephone = @Value4, Email = @Value5, Nom_Pass = @Value6, Ident_Nom= @Value7 WHERE ID_Clienta = @ID;";
 
         public string Update_Prava = $@"UPDATE prava SET ID_Clienta = @Value1, Nom_VodPrav = @Value2, AM = @Value3, A1 = @Value4, A = @Value5, B= @Value6, C = @Value7, D = @Value8 WHERE ID_Prav = @ID;";
+
+        public string Update_Dogovory = $@"UPDATE dogovory SET ID_Sotrudnika = @Value1, ID_Clienta = @Value2, N_Arendy = @Value3, K_Arendy = @Value4, Summa = @Value5, ID_Avto = @Value6 WHERE ID_Dogovora = @ID;";
         //Update
 
         //Delete
@@ -113,6 +123,8 @@ WHERE prava.ID_Clienta IS NULL;";
         public string Delete_Clienty = $@"DELETE FROM clienty WHERE ID_Clienta = @ID;";
 
         public string Delete_Prava = $@"DELETE FROM prava WHERE ID_Prav = @ID;";
+
+        public string Delete_Dogovory = $@"DELETE FROM dogovory WHERE ID_Dogovora = @ID;";
         //Delete
     }
 }

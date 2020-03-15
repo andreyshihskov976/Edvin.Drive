@@ -169,6 +169,16 @@ namespace Edvin.Drive
                 else
                     MessageBox.Show("Для всех записей клиентов уже существуют записи в данной таблице.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            else if (identify == "dogovory")
+            {
+                Dogovory dogovory = new Dogovory(MySqlOperations, MySqlQueries);
+                dogovory.button1.Visible = true;
+                dogovory.button3.Visible = false;
+                dogovory.AcceptButton = dogovory.button1;
+                dogovory.Dogovory_Closed += договорыToolStripMenuItem_Click;
+                dogovory.Owner = this;
+                dogovory.Show();
+            }
         }
 
         public void Update_String()
@@ -348,5 +358,31 @@ namespace Edvin.Drive
         {
             Delete_String();
         }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (identify == "clienty")
+                if (MySqlOperations.Select_Text(MySqlQueries.Select_Prava_Exists, dataGridView1.SelectedRows[0].Cells[0].Value.ToString()) != "1")
+                {
+                    if (MessageBox.Show("Желаете добавить водительские права данного клиента?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        Prava prava = new Prava(MySqlOperations, MySqlQueries);
+                        prava.button1.Visible = true;
+                        prava.button3.Visible = false;
+                        prava.AcceptButton = prava.button1;
+                        prava.comboBox3.Items.Clear();
+                        MySqlOperations.Select_ComboBox(MySqlQueries.Select_Clienty_ComboBoxIsNull, prava.comboBox3);
+                        MySqlOperations.Search_In_ComboBox(dataGridView1.SelectedRows[0].Cells[1].Value.ToString(), prava.comboBox3);
+                        if (prava.comboBox3.Items.Count > 0)
+                        {
+                            prava.Prava_Closed += клиентыToolStripMenuItem_Click;
+                            prava.Owner = this;
+                            prava.Show();
+                        }
+                        else
+                            MessageBox.Show("Для всех записей клиентов уже существуют записи в данной таблице.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+        } 
     }
 }
