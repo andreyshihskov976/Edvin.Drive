@@ -55,6 +55,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Avtopark.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Avtopark.Designer.cs">
+      <DependentUpon>Avtopark.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Clienty.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Clienty.Designer.cs">
+      <DependentUpon>Clienty.cs</DependentUpon>
+    </Compile>
     <Compile Include="Doljnosti.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,13 +81,43 @@
     </Compile>
     <Compile Include="MySqlOperations.cs" />
     <Compile Include="MySqlQueries.cs" />
+    <Compile Include="Prava.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Prava.Designer.cs">
+      <DependentUpon>Prava.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Price.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Price.Designer.cs">
+      <DependentUpon>Price.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sotrudniki.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sotrudniki.Designer.cs">
+      <DependentUpon>Sotrudniki.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Avtopark.resx">
+      <DependentUpon>Avtopark.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Clienty.resx">
+      <DependentUpon>Clienty.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Doljnosti.resx">
       <DependentUpon>Doljnosti.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainWin.resx">
       <DependentUpon>MainWin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Prava.resx">
+      <DependentUpon>Prava.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Price.resx">
+      <DependentUpon>Price.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -86,6 +128,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Sotrudniki.resx">
+      <DependentUpon>Sotrudniki.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
