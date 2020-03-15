@@ -152,6 +152,23 @@ namespace Edvin.Drive
                 clienty.Owner = this;
                 clienty.Show();
             }
+            else if (identify == "prava")
+            {
+                Prava prava = new Prava(MySqlOperations, MySqlQueries);
+                prava.button1.Visible = true;
+                prava.button3.Visible = false;
+                prava.AcceptButton = prava.button1;
+                prava.comboBox3.Items.Clear();
+                MySqlOperations.Select_ComboBox(MySqlQueries.Select_Clienty_ComboBoxIsNull, prava.comboBox3);
+                if (prava.comboBox3.Items.Count > 0)
+                {
+                    prava.Prava_Closed += водПраваToolStripMenuItem_Click;
+                    prava.Owner = this;
+                    prava.Show();
+                }
+                else
+                    MessageBox.Show("Для всех записей клиентов уже существуют записи в данной таблице.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         public void Update_String()
@@ -230,7 +247,37 @@ namespace Edvin.Drive
                     clienty.Owner = this;
                     clienty.Show();
                 }
+                else if (identify == "prava")
+                {
+                    Prava prava = new Prava(MySqlOperations, MySqlQueries, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
+                    prava.button3.Visible = true;
+                    prava.button1.Visible = false;
+                    MySqlOperations.Search_In_ComboBox(dataGridView1.SelectedRows[i].Cells[1].Value.ToString(), prava.comboBox3);
+                    prava.comboBox3.Enabled = false;
+                    prava.maskedTextBox2.Text = dataGridView1.SelectedRows[i].Cells[2].Value.ToString();
+                    StringToBool(i, prava);
+                    prava.AcceptButton = prava.button3;
+                    prava.Prava_Closed += водПраваToolStripMenuItem_Click;
+                    prava.Owner = this;
+                    prava.Show();
+                }
             }
+        }
+
+        private void StringToBool(int i, Prava prava)
+        {
+            if (dataGridView1.SelectedRows[i].Cells[3].Value.ToString() == "Есть")
+                prava.checkBox1.Checked = true;
+            if (dataGridView1.SelectedRows[i].Cells[4].Value.ToString() == "Есть")
+                prava.checkBox2.Checked = true;
+            if (dataGridView1.SelectedRows[i].Cells[5].Value.ToString() == "Есть")
+                prava.checkBox3.Checked = true;
+            if (dataGridView1.SelectedRows[i].Cells[6].Value.ToString() == "Есть")
+                prava.checkBox4.Checked = true;
+            if (dataGridView1.SelectedRows[i].Cells[7].Value.ToString() == "Есть")
+                prava.checkBox5.Checked = true;
+            if (dataGridView1.SelectedRows[i].Cells[8].Value.ToString() == "Есть")
+                prava.checkBox6.Checked = true;
         }
 
         private void Delete_String()
@@ -270,6 +317,13 @@ namespace Edvin.Drive
                     for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
                         MySqlOperations.Insert_Update_Delete(MySqlQueries.Delete_Clienty, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
                     MySqlOperations.Select_DataGridView(MySqlQueries.Select_Clienty, dataGridView1);
+                    dataGridView1.Columns[0].Visible = false;
+                }
+                else if (identify == "prava")
+                {
+                    for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
+                        MySqlOperations.Insert_Update_Delete(MySqlQueries.Delete_Prava, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
+                    MySqlOperations.Select_DataGridView(MySqlQueries.Select_Prava, dataGridView1);
                     dataGridView1.Columns[0].Visible = false;
                 }
             }

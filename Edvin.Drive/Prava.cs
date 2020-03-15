@@ -29,11 +29,34 @@ namespace Edvin.Drive
         {
             if (maskedTextBox2.Text.Length == 9)
             {
-                MySqlOperations.Insert_Update_Delete(MySqlQueries.Insert_Avtopark, null, MySqlOperations.Select_Text(MySqlQueries.Select_Price_ID, null, comboBox3.Text), maskedTextBox1.Text, maskedTextBox2.Text);
-                this.Close();
+                string am = "Нет";
+                string a1 = "Нет";
+                string a = "Нет";
+                string b = "Нет";
+                string c = "Нет";
+                string d = "Нет";
+                BoolToString(ref am, ref a1, ref a, ref b, ref c, ref d);
+                    MySqlOperations.Insert_Update_Delete(MySqlQueries.Insert_Prava, null, MySqlOperations.Select_Text(MySqlQueries.Select_Clienty_ID, null, comboBox3.Text), maskedTextBox2.Text, am, a1, a, b, c, d);
+                    this.Close();
             }
             else
                 MessageBox.Show("Проверьте, все ли поля заполнены.", "Предупрждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void BoolToString(ref string am, ref string a1, ref string a, ref string b, ref string c, ref string d)
+        {
+            if (checkBox1.Checked)
+                am = "Есть";
+            if (checkBox2.Checked)
+                a1 = "Есть";
+            if (checkBox3.Checked)
+                a = "Есть";
+            if (checkBox4.Checked)
+                b = "Есть";
+            if (checkBox5.Checked)
+                c = "Есть";
+            if (checkBox6.Checked)
+                d = "Есть";
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -45,7 +68,14 @@ namespace Edvin.Drive
         {
             if (maskedTextBox2.Text.Length == 9)
             {
-                MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Avtopark, ID, comboBox1.Text, textBox1.Text, comboBox2.Text, MySqlOperations.Select_Text(MySqlQueries.Select_Price_ID, null, comboBox3.Text), maskedTextBox1.Text, maskedTextBox2.Text);
+                string am = "Нет";
+                string a1 = "Нет";
+                string a = "Нет";
+                string b = "Нет";
+                string c = "Нет";
+                string d = "Нет";
+                BoolToString(ref am, ref a1, ref a, ref b, ref c, ref d);
+                MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Prava, ID, MySqlOperations.Select_Text(MySqlQueries.Select_Clienty_ID, null, comboBox3.Text), maskedTextBox2.Text, am, a1, a, b, c, d);
                 this.Close();
             }
             else

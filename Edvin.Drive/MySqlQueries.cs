@@ -23,9 +23,8 @@ INNER JOIN sotrudniki ON sotrudniki.ID_Sotrudnika = dogovory.ID_Sotrudnika;";
         public string Select_Doljnosti = $@"SELECT doljnosti.ID_Doljnosti, doljnosti.Name AS 'Наименование должности'
 FROM doljnosti;";
 
-        public string Select_Prava = $@"SELECT CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo) AS 'Ф.И.О. Клиенты',
-prava.Nom_VodPrav AS 'Номер В/У', prava.AM AS 'АМ', prava.A1 AS 'А1', prava.A AS 'А', prava.B AS 'B',
-prava.BE AS 'BE', prava.C AS 'CE', prava.D AS 'D', prava.DE AS 'DE'
+        public string Select_Prava = $@"SELECT prava.ID_Prav, CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo) AS 'Ф.И.О. Клиенты',
+prava.Nom_VodPrav AS 'Номер В/У', prava.AM AS 'АМ', prava.A1 AS 'А1', prava.A AS 'А', prava.B AS 'B', prava.C AS 'C', prava.D AS 'D'
 FROM prava INNER JOIN clienty ON prava.ID_Clienta = clienty.ID_Clienta;";
 
         public string Select_Price = $@"SELECT price.ID_Price, price.Name AS 'Наименование пакета', price.Stoimost AS 'Стоимость', price.Skidka AS 'Скидка'
@@ -61,11 +60,17 @@ WHERE acts.Name = '0';";
 
         public string Select_Clienty_ComboBox = $@"SELECT CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo) FROM clienty;";
 
+        public string Select_Clienty_ComboBoxIsNull = $@"SELECT DISTINCT CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo) FROM clienty
+LEFT JOIN prava ON prava.ID_Clienta = clienty.ID_Clienta
+WHERE prava.ID_Clienta IS NULL;";
+
         public string Select_Clienty_ID = $@"SELECT clienty.ID_Clienta FROM clienty WHERE CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo) = @Value1;";
 
         public string Select_Sotrudniki_ComboBox = $@"SELECT CONCAT(sotrudniki.Familiya, ' ', sotrudniki.Imya, ' ', sotrudniki.Otchestvo) FROM sotrudniki;";
 
         public string Select_Sotrudniki_ID = $@"SELECT sotrudniki.ID_Sotrudnika FROM sotrudniki WHERE CONCAT(sotrudniki.Familiya, ' ', sotrudniki.Imya, ' ', sotrudniki.Otchestvo) = @Value1;";
+
+        public string Select_Prava_Exists = $@"SELECT EXISTS(SELECT * FROM prava WHERE prava.ID_Clienta = @ID);";
         //Select
 
         //Insert
