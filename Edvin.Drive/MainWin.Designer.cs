@@ -1,6 +1,6 @@
 ﻿namespace Edvin.Drive
 {
-    partial class Form1
+    partial class MainWin
     {
         /// <summary>
         /// Required designer variable.

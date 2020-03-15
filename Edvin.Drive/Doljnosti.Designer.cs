@@ -66,6 +66,7 @@
             // 
             // button2
             // 
+            this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.button2.Location = new System.Drawing.Point(221, 32);
             this.button2.Name = "button2";
@@ -78,7 +79,7 @@
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.button3.Location = new System.Drawing.Point(0, 64);
+            this.button3.Location = new System.Drawing.Point(0, 32);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(215, 26);
             this.button3.TabIndex = 4;
@@ -90,14 +91,22 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.CancelButton = this.button2;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Doljnosti";
+            this.ShowIcon = false;
             this.Text = "Edvin.Drive (Константы.Должности)";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Doljnosti_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

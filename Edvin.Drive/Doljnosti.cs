@@ -14,17 +14,24 @@ namespace Edvin.Drive
     {
         MySqlOperations MySqlOperations = null;
         MySqlQueries MySqlQueries = null;
-        public Doljnosti(MySqlOperations mySqlOperations, MySqlQueries mySqlQueries)
+        string ID = null;
+        public Doljnosti(MySqlOperations mySqlOperations, MySqlQueries mySqlQueries, string iD = null)
         {
             InitializeComponent();
             MySqlOperations = mySqlOperations;
             MySqlQueries = mySqlQueries;
+            ID = iD;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MySqlOperations.Insert_Update_Delete(MySqlQueries.Insert_Doljnosti,null,textBox1.Text);
-            this.Close();
+            if (textBox1.Text != "")
+            {
+                MySqlOperations.Insert_Update_Delete(MySqlQueries.Insert_Doljnosti, null, textBox1.Text);
+                this.Close();
+            }
+            else
+                MessageBox.Show("Проверьте, все ли поля заполнены.", "Предупрждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -34,7 +41,19 @@ namespace Edvin.Drive
 
         private void button3_Click(object sender, EventArgs e)
         {
-
+            if (textBox1.Text != "")
+            {
+                MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Doljnosti, ID, textBox1.Text);
+                this.Close();
+            }
+            else
+                MessageBox.Show("Проверьте, все ли поля заполнены.", "Предупрждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
+
+        private void Doljnosti_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Doljnosti_Closed(this, EventArgs.Empty);
+        }
+        public event EventHandler Doljnosti_Closed;
     }
 }

@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Edvin.Drive
 {
-    public partial class Form1 : Form
+    public partial class MainWin : Form
     {
         MySqlQueries MySqlQueries = null;
         MySqlOperations MySqlOperations = null;
         string identify = string.Empty;
 
-        public Form1()
+        public MainWin()
         {
             InitializeComponent();
             MySqlQueries = new MySqlQueries();
@@ -115,68 +108,28 @@ namespace Edvin.Drive
                 doljnosti.button1.Visible = true;
                 doljnosti.button3.Visible = false;
                 doljnosti.AcceptButton = doljnosti.button1;
-                doljnosti.ShowDialog();
+                doljnosti.Doljnosti_Closed += должностиToolStripMenuItem_Click;
+                doljnosti.Owner = this;
+                doljnosti.Show();
             }
-            //if (identify == "raschetniki")
-            //{
-            //    Raschetniki raschetniki = new Raschetniki(MySqlOperations, MySqlQueries);
-            //    raschetniki.Raschetniki_Closed += РасчетныеСчетаToolStripMenuItem_Click;
-            //    raschetniki.Owner = this;
-            //    raschetniki.button1.Visible = true;
-            //    raschetniki.button3.Visible = false;
-            //    raschetniki.AcceptButton = raschetniki.button1;
-            //    raschetniki.Show();
-            //}
-            //else if (identify == "otdely")
-            //{
-            //    Otdely otdely = new Otdely(MySqlOperations, MySqlQueries);
-            //    otdely.Otdely_Closed += ОтделыToolStripMenuItem_Click;
-            //    otdely.Owner = this;
-            //    otdely.button1.Visible = true;
-            //    otdely.button3.Visible = false;
-            //    otdely.AcceptButton = otdely.button1;
-            //    otdely.Show();
-            //}
-            //else if (identify == "sotrudniki")
-            //{
-            //    Sotrudniki sotrudniki = new Sotrudniki(MySqlOperations, MySqlQueries);
-            //    sotrudniki.Sotrudniki_Closed += СотрудникиToolStripMenuItem1_Click;
-            //    sotrudniki.Owner = this;
-            //    if (sotrudniki.comboBox1.Items.Count == 0 && Role[3] != '0')
-            //        Sotrudniki_After_Otdely(sotrudniki);
-            //    if (sotrudniki.comboBox2.Items.Count == 0 && Role[0] != '0')
-            //        Sotrudniki_After_Doljnosti(sotrudniki);
-            //    if (sotrudniki.comboBox3.Items.Count == 0 && Role[2] != '0')
-            //        Sotrudniki_After_Oklad(sotrudniki);
-            //    if (sotrudniki.comboBox4.Items.Count == 0 && Role[4] != '0')
-            //        Sotrudniki_After_RS(sotrudniki);
-            //    sotrudniki.button1.Visible = true;
-            //    sotrudniki.button3.Visible = false;
-            //    sotrudniki.AcceptButton = sotrudniki.button1;
-            //    sotrudniki.Show();
-            //}
-            //else if (identify == "oklad")
-            //{
-            //    Oklad oklad = new Oklad(MySqlOperations, MySqlQueries);
-            //    oklad.Oklad_Closed += ОкладToolStripMenuItem_Click;
-            //    oklad.Owner = this;
-            //    oklad.button1.Visible = true;
-            //    oklad.button3.Visible = false;
-            //    oklad.AcceptButton = oklad.button1;
-            //    oklad.Show();
-            //}
-            //else if (identify == "vyplaty")
-            //{
-            //    Vyplaty vyplaty = new Vyplaty(MySqlOperations, MySqlQueries);
-            //    vyplaty.Vyplaty_Closed += ВыплатыЗарплатыToolStripMenuItem_Click;
-            //    vyplaty.Owner = this;
-            //    vyplaty.Show();
-            //}
         }
 
         public void Update_String()
         {
-
+            for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
+            {
+                if (identify == "doljnosti")
+                {
+                    Doljnosti doljnosti = new Doljnosti(MySqlOperations, MySqlQueries, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
+                    doljnosti.button3.Visible = true;
+                    doljnosti.button1.Visible = false;
+                    doljnosti.textBox1.Text = dataGridView1.SelectedRows[i].Cells[1].Value.ToString();
+                    doljnosti.AcceptButton = doljnosti.button1;
+                    doljnosti.Doljnosti_Closed += должностиToolStripMenuItem_Click;
+                    doljnosti.Owner = this;
+                    doljnosti.Show();
+                }
+            }
         }
 
         private void Delete_String()
@@ -185,49 +138,12 @@ namespace Edvin.Drive
             {
                 for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
                 {
-                    //if (identify == "raschetniki")
-                    //{
-                    //    MySqlOperations.Delete(MySqlQueries.Delete_Rasch_Scheta, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
-                    //    identify = "raschetniki";
-                    //    DataGrid_Load(MySqlQueries.Select_Rasch_Scheta);
-                    //    this.Text = "Расчетные счета";
-                    //}
-                    //else if (identify == "otdely")
-                    //{
-
-                    //    MySqlOperations.Delete(MySqlQueries.Delete_Otdely, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
-                    //    identify = "otdely";
-                    //    DataGrid_Load(MySqlQueries.Select_Otdely);
-                    //    this.Text = "Отделы";
-                    //}
-                    //else if (identify == "sotrudniki")
-                    //{
-                    //    MySqlOperations.Delete(MySqlQueries.Delete_Sotrudniki, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
-                    //    identify = "sotrudniki";
-                    //    DataGrid_Load(MySqlQueries.Select_Sotrudniki);
-                    //    this.Text = "Сотрудники";
-                    //}
-                    //else if (identify == "oklad")
-                    //{
-                    //    MySqlOperations.Delete(MySqlQueries.Delete_Oklad, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
-                    //    identify = "oklad";
-                    //    DataGrid_Load(MySqlQueries.Select_Oklad);
-                    //    this.Text = "Оклад";
-                    //}
-                    //else if (identify == "doljnosti")
-                    //{
-                    //    MySqlOperations.Delete(MySqlQueries.Delete_Doljnosti, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
-                    //    identify = "doljnosti";
-                    //    DataGrid_Load(MySqlQueries.Select_Doljnosti);
-                    //    this.Text = "Должности";
-                    //}
-                    //else if (identify == "vyplaty")
-                    //{
-                    //    MySqlOperations.Delete(MySqlQueries.Delete_Vyplaty, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
-                    //    identify = "vyplaty";
-                    //    DataGrid_Load(MySqlQueries.Select_Vyplaty);
-                    //    this.Text = "Выплаты зарплаты";
-                    //}
+                    if (identify == "doljnosti")
+                    {
+                        MySqlOperations.Insert_Update_Delete(MySqlQueries.Delete_Doljnosti, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
+                        MySqlOperations.Select_DataGridView(MySqlQueries.Select_Doljnosti, dataGridView1);
+                        dataGridView1.Columns[0].Visible = false;
+                    }
                 }
             }
         }

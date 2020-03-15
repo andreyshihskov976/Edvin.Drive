@@ -54,6 +54,20 @@ WHERE acts.Name = '0';";
 
         //Insert
         public string Insert_Doljnosti = $@"INSERT INTO doljnosti (Name) VALUES (@Value1);";
+
+        public string Insert_Price = $@"INSERT INTO price (Name, Stoimost, Skidka) VALUES (@Value1, @Value2, @Value3);";
         //Insert
+
+        //Update
+        public string Update_Doljnosti = $@"UPDATE doljnosti SET Name = @Value1 WHERE ID_Dojnosti = @ID;";
+
+        public string Update_Price = $@"UPDATE price SET Name = @Value1, Stoimost = @Value2, Skidka = @Value3 WHERE ID_Price = @ID;";
+        //Update
+
+        //Delete
+        public string Delete_Doljnosti = $@"DELETE FROM doljnosti WHERE ID_Dojnosti = @ID;";
+
+        public string Delete_Price = $@"DELETE FROM price WHERE ID_Price = @ID;";
+        //Delete
     }
 }
