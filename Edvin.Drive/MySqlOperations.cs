@@ -4,6 +4,7 @@ using System;
 using System.Data;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Collections;
 using Application = System.Windows.Forms.Application;
 using ExcelApplication = Microsoft.Office.Interop.Excel.Application;
 
@@ -158,6 +159,40 @@ namespace Edvin.Drive
             }
         }
 
+        public void Select_List(string query,ref ArrayList list, string ID = null, string Value1 = null, string Value2 = null, string Value3 = null, string Value4 = null, string Value5 = null, string Value6 = null, string Value7 = null, string Value8 = null)
+        {
+            //string output = string.Empty;
+            try
+            {
+                sqlCommand = new MySqlCommand(query, mySqlConnection);
+                sqlCommand.Parameters.AddWithValue("Value1", Value1);
+                sqlCommand.Parameters.AddWithValue("Value2", Value2);
+                sqlCommand.Parameters.AddWithValue("Value3", Value3);
+                sqlCommand.Parameters.AddWithValue("Value4", Value4);
+                sqlCommand.Parameters.AddWithValue("Value5", Value5);
+                sqlCommand.Parameters.AddWithValue("Value6", Value6);
+                sqlCommand.Parameters.AddWithValue("Value7", Value7);
+                sqlCommand.Parameters.AddWithValue("Value8", Value8);
+                sqlCommand.Parameters.AddWithValue("ID", ID);
+                sqlDataReader = sqlCommand.ExecuteReader();
+                while (sqlDataReader.Read())
+                {
+                    list.Add(Convert.ToString(sqlDataReader[0]));
+                }
+                //return output;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //return string.Empty;
+            }
+            finally
+            {
+                if (sqlDataReader != null)
+                    sqlDataReader.Close();
+            }
+        }
+
         public void Insert_Update_Delete(string query, string ID = null, string Value1 = null, string Value2 = null, string Value3 = null, string Value4 = null, string Value5 = null, string Value6 = null, string Value7 = null, string Value8 = null)
         {
             try
@@ -198,6 +233,32 @@ namespace Edvin.Drive
             }
             else dataGridView.ClearSelection();
         }
+
+        public void Filter(ToolStripTextBox textBox, DataGridView dataGridView)
+        {
+            if (textBox.Text != "")
+            {
+                for (int i = 0; i < dataGridView.RowCount; i++)
+                {
+                    dataGridView.Rows[i].Selected = false;
+                    for (int j = 0; j < dataGridView.ColumnCount; j++)
+                        if (dataGridView.Rows[i].Cells[j].Value != null)
+                            if (dataGridView.Rows[i].Cells[j].Value.ToString().Contains(textBox.Text) == true)
+                            {
+                                dataGridView.CurrentCell = dataGridView.Rows[i].Cells[1];
+                                dataGridView.Rows[i].Visible = true;                                
+                                break;
+                            }
+                            else
+                            {
+                                dataGridView.Rows[i].Visible = false;
+                                break;
+                            }
+                }
+            }
+            else dataGridView.ClearSelection();
+        }
+
         public void Print_Dogovor(MySqlQueries mySqlQueries, DataGridView dataGridView, DateTimePicker dateTimePicker, SaveFileDialog saveFileDialog, string ID)
         {
             ExcelApplication ExcelApp = null;

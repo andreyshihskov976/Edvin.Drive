@@ -55,6 +55,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Acts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Acts.Designer.cs">
+      <DependentUpon>Acts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Avtopark.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,6 +113,9 @@
     <Compile Include="Sotrudniki.Designer.cs">
       <DependentUpon>Sotrudniki.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Acts.resx">
+      <DependentUpon>Acts.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Avtopark.resx">
       <DependentUpon>Avtopark.cs</DependentUpon>
     </EmbeddedResource>

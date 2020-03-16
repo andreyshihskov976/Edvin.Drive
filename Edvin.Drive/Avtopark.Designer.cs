@@ -134,6 +134,9 @@
             this.comboBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Items.AddRange(new object[] {
+            "АМ",
+            "А1",
+            "А",
             "B",
             "C",
             "D"});
