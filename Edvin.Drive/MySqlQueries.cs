@@ -118,6 +118,23 @@ FROM dogovory INNER JOIN clienty ON dogovory.ID_Clienta = clienty.ID_Clienta
 INNER JOIN sotrudniki ON dogovory.ID_Sotrudnika = sotrudniki.ID_Sotrudnika
 INNER JOIN avtopark ON dogovory.ID_Avto = avtopark.ID_Avto
 WHERE dogovory.ID_Dogovora = @ID;";
+
+        public string Select_Print_Acts = $@"SET lc_time_names = 'ru_RU';
+SELECT CONCAT(CONCAT(acts.Name,' №',acts.ID_Act,' от ', DATE_FORMAT(acts.Date, '%d %M %Y')),';', 
+CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date,'%d %M %Y')),';',
+CONCAT(sotrudniki.Familiya, ' ', sotrudniki.Imya, ' ', sotrudniki.Otchestvo),';',
+CONCAT(avtopark.Marka, ' ', avtopark.Model,' Гос. знак: ',
+avtopark.Gos_Znak,', VIN-номер: ', avtopark.VIN_Nomer),';',
+CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo),';',
+acts.Comments)
+FROM acts INNER JOIN dogovory ON acts.ID_Dogovora = dogovory.ID_Dogovora
+INNER JOIN avtopark ON dogovory.ID_Avto = avtopark.ID_Avto
+INNER JOIN sotrudniki ON dogovory.ID_Sotrudnika = sotrudniki.ID_Sotrudnika
+INNER JOIN clienty ON dogovory.ID_Clienta = clienty.ID_Clienta
+WHERE acts.ID_Act = '3';";
+
+        public string Select_Dogovor = $@"SET lc_time_names = 'ru_RU';
+SELECT CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date, '%d %M %Y')) FROM dogovory WHERE dogovory.ID_Dogovora = @ID;";
         //Select
 
         //Insert
@@ -156,7 +173,7 @@ WHERE dogovory.ID_Dogovora = @ID;";
         public string Update_Acts = $@"UPDATE acts SET Name = @Value1, ID_Dogovora = @Value2, ID_Sotrudnika = @Value3, ID_Avto = @Value4, Comments = @Value5 WHERE ID_Act = @ID;";
 
         public string Update_Identify_Dogovory = $@"UPDATE dogovory SET dogovory.Identify = 'Не действительный'
-WHERE dogovory.K_Arendy < CURDATE() AND dogovory.ID_Dogovora = @ID;";
+WHERE dogovory.ID_Dogovora = @ID;";
 
         public string Update_K_Date_Dogovory = $@"UPDATE dogovory SET dogovory.K_Arendy = DATE_ADD(CURDATE(), INTERVAL 1 DAY),
 dogovory.Summa = dogovory.Summa + (SELECT price.Stoimost-price.Skidka/100 FROM price INNER JOIN avtopark ON avtopark.ID_Price = price.ID_Price 

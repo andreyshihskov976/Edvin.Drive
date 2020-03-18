@@ -331,10 +331,10 @@ namespace Edvin.Drive
             Document Document = null;
             string output = null;
             string fileName = null;
-            saveFileDialog.Title = "Сохранить договор как";
-            output = Select_Text(MySqlQueries.Select_Print_Dogovory, ID);
-            saveFileDialog.FileName = "Договор " + output.Split(';')[0];
-            saveFileDialog.InitialDirectory = Application.StartupPath + "\\Договоры\\";
+            saveFileDialog.Title = "Сохранить акт как";
+            output = Select_Text(MySqlQueries.Select_Print_Acts, ID);
+            saveFileDialog.FileName = output.Split(';')[0];
+            saveFileDialog.InitialDirectory = Application.StartupPath + "\\Акты\\";
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -342,25 +342,15 @@ namespace Edvin.Drive
                     fileName = saveFileDialog.FileName;
                     WordApp = new WordApplication();
                     Documents = WordApp.Documents;
-                    Document = Documents.Open(Application.StartupPath + "\\blanks\\Dogovor.docx");
-                    Replace("{Договор}", output.Split(';')[0], Document);
-                    Replace("{Сотрудник}", output.Split(';')[1], Document);
-                    Replace("{Клиент}", output.Split(';')[2], Document);
-                    Replace("{Клиент}", output.Split(';')[2], Document);
+                    Document = Documents.Open(Application.StartupPath + "\\blanks\\Act.docx");
+                    Replace("{Наименование}", output.Split(';')[0], Document);
+                    Replace("{Договор}", output.Split(';')[1], Document);
+                    Replace("{Сотрудник}", output.Split(';')[2], Document);
+                    Replace("{Сотрудник}", output.Split(';')[2], Document);
                     Replace("{Авто}", output.Split(';')[3], Document);
-                    Replace("{Гос.знак}", output.Split(';')[4], Document);
-                    Replace("{VIN-номер}", output.Split(';')[5], Document);
-                    Replace("{Стоимость авто}", output.Split(';')[6], Document);
-                    Replace("{Дата начала}", output.Split(';')[7], Document);
-                    Replace("{Дата окончания}", output.Split(';')[8], Document);
-                    Replace("{Дата начала}", output.Split(';')[7], Document);
-                    Replace("{Дата окончания}", output.Split(';')[8], Document);
-                    Replace("{Сумма}", output.Split(';')[9], Document);
-                    Replace("{Паспорт}", output.Split(';')[10], Document);
-                    Replace("{Ид номер}", output.Split(';')[11], Document);
-                    Replace("{Телефон}", output.Split(';')[12], Document);
-                    Replace("{Email}", output.Split(';')[13], Document);
-                    Replace("{Дата}", output.Split(';')[14], Document);
+                    Replace("{Клиент}", output.Split(';')[4], Document);
+                    Replace("{Клиент}", output.Split(';')[4], Document);
+                    Replace("{Комментарий}", output.Split(';')[5], Document);
                     Document.SaveAs(fileName);
                     WordApp.Visible = true;
                 }
