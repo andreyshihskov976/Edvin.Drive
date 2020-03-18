@@ -26,7 +26,6 @@ namespace Edvin.Drive
                 dataGridView1.ClearSelection();
                 for (int i = 0; i < dataGridView1.Rows.Count; i++)
                     dataGridView1.Rows[i].Visible = true;
-                    
             }
         }
 
@@ -89,18 +88,43 @@ namespace Edvin.Drive
         private void Form1_Load(object sender, EventArgs e)
         {
             MySqlOperations.OpenConnection();
+            MySqlOperations.Select_DataGridView(MySqlQueries.Select_Dogovory, dataGridView1);
+            identify = "dogovory";
+            dataGridView1.Columns[0].Visible = false;
             if (MySqlOperations.Select_Text(MySqlQueries.Select_Exists_Nedeistv_Dogovory) == "1")
             {
-                string Count = MySqlOperations.Select_Text(MySqlQueries.Select_Count_Nedeistv_Dogovory);
-                MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identify_Dogovory);
                 ArrayList list = new ArrayList();
-                MySqlOperations.Select_List(MySqlQueries.Select_ListAvto, ref list);
-                foreach(var s in list)
+                MySqlOperations.Select_List(MySqlQueries.Select_List_Nedeistv_Dogovory, ref list);
+                int Count = 0;
+                foreach (var s in list)
                 {
-                    MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identyfy_Avtopark, s.ToString());
+                    if (MessageBox.Show("Договор " + s.ToString() +" прекращает своё действие. Желаете его закрыть и оформить акт осмотра авто?", "Вопрос",MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identify_Dogovory, s.ToString().Split(' ')[1]);
+                        MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identyfy_Avtopark, s.ToString().Split(' ')[1]);
+                        Acts acts = new Acts(MySqlOperations, MySqlQueries);
+                        acts.button1.Visible = true;
+                        acts.button3.Visible = false;
+                        acts.AcceptButton = acts.button1;
+                        acts.comboBox1.SelectedItem = acts.comboBox1.Items[1];
+                        MySqlOperations.Search_In_ComboBox(s.ToString(), acts.comboBox2);
+                        acts.comboBox1.Enabled = false;
+                        acts.comboBox2.Enabled = false;
+                        acts.comboBox3.Enabled = false;
+                        acts.comboBox4.Enabled = false;
+                        acts.Acts_Closed += договорыToolStripMenuItem_Click;
+                        acts.Owner = this;
+                        acts.Show();
+                        Count++;
+                    }
+                    else
+                    {
+                        MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_K_Date_Dogovory, s.ToString().Split(' ')[1]);
+                        MySqlOperations.Select_DataGridView(MySqlQueries.Select_Dogovory, dataGridView1);
+                        identify = "dogovory";
+                        dataGridView1.Columns[0].Visible = false;
+                    }
                 }
-                MessageBox.Show("Из аренды было возвращено: " + list.Count+" автомобиля","Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                MessageBox.Show("Договоров пректративших своё действие: " + Count, "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

@@ -71,13 +71,18 @@ FROM dogovory
 INNER JOIN avtopark ON dogovory.ID_Avto = avtopark.ID_Avto
 WHERE CONCAT('№ ', dogovory.ID_Dogovora, ' от ', dogovory.Date) = @Value1;";
 
-        public string Select_Dogovory_ComboBox = $@"SELECT CONCAT('№ ', dogovory.ID_Dogovora, ' от ', dogovory.Date) FROM dogovory;";
+        public string Select_Dogovory_ComboBox = $@"SET lc_time_names = 'ru_RU'; SELECT CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date,'%d %M %Y')) FROM dogovory;";
 
-        public string Select_Dogovory_ID = $@"SELECT dogovory.ID_Dogovora FROM dogovory WHERE CONCAT('№ ', dogovory.ID_Dogovora, ' от ', dogovory.Date) = @Value1;";
+        public string Select_Dogovory_ID = $@"SET lc_time_names = 'ru_RU'; SELECT dogovory.ID_Dogovora FROM dogovory WHERE CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date,'%d %M %Y')) = @Value1;";
 
         public string Select_Prava_Exists = $@"SELECT EXISTS(SELECT * FROM prava WHERE prava.ID_Clienta = @ID);";
 
-        public string Select_Exists_Nedeistv_Dogovory = $@"SELECT EXISTS(SELECT * FROM dogovory WHERE dogovory.K_Arendy < CURDATE() AND dogovory.Identify = 'Действительный');";
+        public string Select_Exists_Nedeistv_Dogovory = $@"SELECT EXISTS(SELECT * 
+FROM dogovory WHERE dogovory.K_Arendy < CURDATE() AND dogovory.Identify = 'Действительный');";
+
+        public string Select_List_Nedeistv_Dogovory = $@"SET lc_time_names = 'ru_RU';
+SELECT CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date,'%d %M %Y')) 
+FROM dogovory WHERE dogovory.K_Arendy < CURDATE() AND dogovory.Identify = 'Действительный';";
 
         public string Select_Stoimost = $@"SELECT price.Stoimost-price.Skidka/100 FROM price INNER JOIN avtopark ON avtopark.ID_Price = price.ID_Price WHERE avtopark.ID_Avto = @ID;";
 
@@ -87,12 +92,20 @@ WHERE dogovory.Identify = 'Не действительный';";
 
         public string Select_Identify_Avto = $@"SELECT avtopark.Identify FROM avtopark WHERE avtopark.ID_Avto = @ID;";
 
-        public string Select_Count_Nedeistv_Dogovory = $@"SELECT COUNT(dogovory.ID_Dogovora) AS 'COUNT' 
-FROM dogovory 
-WHERE dogovory.K_Arendy < CURDATE() AND dogovory.Identify = 'Действительный'
-GROUP BY 'COUNT';";
-
         public string Select_Comments_Act = $@"SELECT acts.Comments FROM acts WHERE acts.ID_Act = @ID;";
+
+        public string Select_Prava_Clienty = $@"SELECT CONCAT(prava.AM,';',prava.A1,';',prava.A,';',prava.B,';',prava.C,';',prava.D) 
+FROM prava 
+INNER JOIN clienty ON prava.ID_Clienta = clienty.ID_Clienta
+WHERE clienty.ID_Clienta = @ID;";
+
+        public string Select_Kat_Avto = $@"SELECT if(avtopark.Categoria_Avto = 'AM', 0,
+if(avtopark.Categoria_Avto = 'A1', 1,
+if(avtopark.Categoria_Avto = 'A', 2,
+if(avtopark.Categoria_Avto = 'B', 3,
+if(avtopark.Categoria_Avto = 'C', 4,
+if(avtopark.Categoria_Avto = 'D', 5, 6)))))) 
+FROM avtopark WHERE avtopark.ID_Avto = @ID;";
         //Select
 
         //Insert
@@ -131,9 +144,16 @@ GROUP BY 'COUNT';";
         public string Update_Acts = $@"UPDATE acts SET Name = @Value1, ID_Dogovora = @Value2, ID_Sotrudnika = @Value3, ID_Avto = @Value4, Comments = @Value5 WHERE ID_Act = @ID;";
 
         public string Update_Identify_Dogovory = $@"UPDATE dogovory SET dogovory.Identify = 'Не действительный'
-WHERE dogovory.K_Arendy < CURDATE();";
+WHERE dogovory.K_Arendy < CURDATE() AND dogovory.ID_Dogovora = @ID;";
 
-        public string Update_Identyfy_Avtopark = $@"UPDATE avtopark SET avtopark.Identify = 'Не занята' WHERE avtopark.ID_Avto = @ID;";
+        public string Update_K_Date_Dogovory = $@"UPDATE dogovory SET dogovory.K_Arendy = DATE_ADD(CURDATE(), INTERVAL 1 DAY),
+dogovory.Summa = dogovory.Summa + (SELECT price.Stoimost-price.Skidka/100 FROM price INNER JOIN avtopark ON avtopark.ID_Price = price.ID_Price 
+WHERE avtopark.ID_Avto = (SELECT dogovory.ID_Avto FROM dogovory WHERE dogovory.ID_Dogovora = @ID)) * 
+(SELECT DATEDIFF(DATE_ADD(CURDATE(), INTERVAL 1 DAY), dogovory.K_Arendy) FROM dogovory WHERE dogovory.ID_Dogovora = @ID)
+WHERE dogovory.K_Arendy < CURDATE() AND dogovory.ID_Dogovora = @ID;";
+
+        public string Update_Identyfy_Avtopark = $@"UPDATE avtopark SET avtopark.Identify = 'Свободна' 
+WHERE avtopark.ID_Avto = (SELECT dogovory.ID_Avto FROM dogovory WHERE dogovory.ID_Dogovora = @ID);";
 
         public string Update_Identify_Avtopark1 = $@"UPDATE avtopark SET avtopark.Identify = 'Занята' WHERE avtopark.ID_Avto = @ID;";
         //Update

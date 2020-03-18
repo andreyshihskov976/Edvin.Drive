@@ -33,7 +33,7 @@ namespace Edvin.Drive
             if (textBox1.Text != "")
             {
                 MySqlOperations.Insert_Update_Delete(MySqlQueries.Insert_Acts,null,comboBox1.Text,
-                    DateTime.Now.Year.ToString() + '-' + DateTime.Now.Month.ToString() + '-' + DateTime.Now.Day.ToString(),
+                    DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Day.ToString(),
                     MySqlOperations.Select_Text(MySqlQueries.Select_Dogovory_ID,null,comboBox2.Text),
                     MySqlOperations.Select_Text(MySqlQueries.Select_Sotrudniki_ID, null, comboBox3.Text),
                     MySqlOperations.Select_Text(MySqlQueries.Select_Avtopark_ID, null, comboBox4.Text),

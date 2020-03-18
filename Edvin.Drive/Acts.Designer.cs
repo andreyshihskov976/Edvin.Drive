@@ -127,7 +127,7 @@
             this.comboBox3.FormattingEnabled = true;
             this.comboBox3.Location = new System.Drawing.Point(224, 68);
             this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(215, 28);
+            this.comboBox3.Size = new System.Drawing.Size(386, 28);
             this.comboBox3.TabIndex = 34;
             // 
             // label4
