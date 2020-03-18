@@ -269,6 +269,7 @@ namespace Edvin.Drive
                     MySqlOperations.Search_In_ComboBox(dataGridView1.SelectedRows[i].Cells[4].Value.ToString(), avtopark.comboBox3);
                     avtopark.maskedTextBox1.Text = dataGridView1.SelectedRows[i].Cells[5].Value.ToString();
                     avtopark.maskedTextBox2.Text = dataGridView1.SelectedRows[i].Cells[6].Value.ToString();
+                    avtopark.numericUpDown1.Value = decimal.Parse(dataGridView1.SelectedRows[i].Cells[7].Value.ToString());
                     avtopark.AcceptButton = avtopark.button3;
                     avtopark.Avtopark_Closed += автопаркToolStripMenuItem_Click;
                     avtopark.Owner = this;
@@ -502,6 +503,20 @@ namespace Edvin.Drive
                 dataGridView1.ClearSelection();
                 foreach(DataGridViewRow row in dataGridView1.Rows)
                     row.Visible = true;
+            }
+        }
+
+        private void печатьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (identify == "dogovory")
+            {
+                for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
+                    MySqlOperations.Print_Dogovor(saveFileDialog1, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
+            }
+            else if(identify == "acts")
+            {
+                for (int i = 0; i < dataGridView1.SelectedRows.Count; i++) { }
+                    //MySqlOperations.Print_Dogovor(saveFileDialog1, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
             }
         }
     }

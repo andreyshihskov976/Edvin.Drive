@@ -1,4 +1,5 @@
 ﻿using Microsoft.Office.Interop.Excel;
+using Microsoft.Office.Interop.Word;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
@@ -7,9 +8,11 @@ using System.Windows.Forms;
 using System.Collections;
 using Application = System.Windows.Forms.Application;
 using ExcelApplication = Microsoft.Office.Interop.Excel.Application;
+using WordApplication = Microsoft.Office.Interop.Word.Application;
 
 namespace Edvin.Drive
 {
+
     public class MySqlOperations
     {
         public MySqlConnection mySqlConnection = new MySqlConnection("server=localhost; user=root; database=prokat_avto; port=3306; password=; charset=utf8;");
@@ -259,79 +262,120 @@ namespace Edvin.Drive
             else dataGridView.ClearSelection();
         }
 
-        public void Print_Dogovor(MySqlQueries mySqlQueries, DataGridView dataGridView, DateTimePicker dateTimePicker, SaveFileDialog saveFileDialog, string ID)
+        private void Replace(string Identify, string Text, Document document)
         {
-            ExcelApplication ExcelApp = null;
-            Workbooks workbooks = null;
-            Workbook workbook = null;
+            var range = document.Content;
+            range.Find.Execute(FindText: Identify, ReplaceWith: Text);
+        }
+
+        public void Print_Dogovor(SaveFileDialog saveFileDialog, string ID)
+        {
+            WordApplication WordApp = null;
+            Documents Documents = null;
+            Document Document = null;
             string output = null;
             string fileName = null;
-            //Select_Text(mySqlQueries.Select_Doljnost_by_ID, ref output, ID);
-            saveFileDialog.Title = "Сохранить график работы как";
-            saveFileDialog.FileName = "График работы для " + output;
-            saveFileDialog.InitialDirectory = Application.StartupPath + "\\Отчетность\\";
+            saveFileDialog.Title = "Сохранить договор как";
+            output = Select_Text(MySqlQueries.Select_Print_Dogovory, ID);
+            saveFileDialog.FileName = "Договор " + output.Split(';')[0];
+            saveFileDialog.InitialDirectory = Application.StartupPath + "\\Договоры\\";
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                fileName = saveFileDialog.FileName;
-                //Select_Text(mySqlQueries.Exists_Grafik_Raboty_Print, ref output, ID, dateTimePicker.Value.Year.ToString() + "-1-1", dateTimePicker.Value.AddYears(1).Year.ToString() + "-1-0");
-                if (output == "1")
+                try
                 {
-                    //Select_DataGridView(mySqlQueries.Print_Grafik, dataGridView, ID, dateTimePicker.Value.Year.ToString() + "-1-1", dateTimePicker.Value.AddYears(1).Year.ToString() + "-1-0");
-                    if (dataGridView.Rows.Count >= 13)
-                    {
-                        try
-                        {
-                            //Select_Text(mySqlQueries.Select_Doljnost_by_ID, ref output, ID);
-                            //ExcelApp = new ExcelApplication();
-                            //workbooks = ExcelApp.Workbooks;
-                            //workbook = workbooks.Open(Application.StartupPath + "\\Blanks\\Grafik.xlsx");
-                            //ExcelApp.Cells[1, 22] = dateTimePicker.Value.Year.ToString();
-                            //ExcelApp.Cells[2, 13] = output;
-                            //ExcelApp.Cells[26, 11] = dateTimePicker.Value.Year.ToString();
-                            ////Select_Text(mySqlQueries.Select_Kol_Rab_Dney_Grafik, ref output, ID, dateTimePicker.Value.Year.ToString() + "-1-1", dateTimePicker.Value.AddYears(1).Year.ToString() + "-1-0");
-                            //ExcelApp.Cells[27, 5] = output;
-                            //Select_Text(mySqlQueries.Select_Kol_PredPrazdn_Dney_Grafik, ref output, ID, dateTimePicker.Value.Year.ToString() + "-1-1", dateTimePicker.Value.AddYears(1).Year.ToString() + "-1-0");
-                            //ExcelApp.Cells[27, 20] = output;
-                            //Select_Text(mySqlQueries.Select_Kol_Poln_Dney_Grafik, ref output, ID, dateTimePicker.Value.Year.ToString() + "-1-1", dateTimePicker.Value.AddYears(1).Year.ToString() + "-1-0");
-                            //ExcelApp.Cells[27, 11] = output;
-                            //Select_Text(mySqlQueries.Select_Itogo_Rab_Chasov_Grafik, ref output, ID, dateTimePicker.Value.Year.ToString() + "-1-1", dateTimePicker.Value.AddYears(1).Year.ToString() + "-1-0");
-                            //ExcelApp.Cells[28, 5] = decimal.Parse(output);
-                            //int ExCol = 2;
-                            //int ExRow = 7;
-                            //for (int i = 0; i < dataGridView.Rows.Count - 1; i++)
-                            //{
-                            //    if (ExRow == 10 || ExRow == 14 || ExRow == 18)
-                            //        ExRow++;
-                            //    ExCol = 2;
-                            //    for (int j = 1; j < dataGridView.Columns.Count; j++)
-                            //    {
-                            //        ExcelApp.Cells[ExRow, ExCol] = dataGridView.Rows[i].Cells[j].Value.ToString();
-                            //        ExCol++;
-                            //    }
-                            //    ExRow++;
-                            //}
-                            //workbook.SaveAs(fileName);
-                            //ExcelApp.Visible = true;
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        finally
-                        {
-                            Marshal.ReleaseComObject(workbook);
-                            Marshal.ReleaseComObject(workbooks);
-                            Marshal.ReleaseComObject(ExcelApp);
-                        }
-                    }
-                    else
-                    {
-                        //MessageBox.Show("Не хватает записей графика работы" + '\n' + "для данной должности на выбранный вами год." + '\n' + "Пожалуйста дополните график работы для данной должности." + '\n' + "Необходимо заполнить график на 12 месяцев для выбранного вами года.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
+                    fileName = saveFileDialog.FileName;
+                    WordApp = new WordApplication();
+                    Documents = WordApp.Documents;
+                    Document = Documents.Open(Application.StartupPath + "\\blanks\\Dogovor.docx");
+                    Replace("{Договор}", output.Split(';')[0], Document);
+                    Replace("{Сотрудник}", output.Split(';')[1], Document);
+                    Replace("{Клиент}", output.Split(';')[2], Document);
+                    Replace("{Клиент}", output.Split(';')[2], Document);
+                    Replace("{Авто}", output.Split(';')[3], Document);
+                    Replace("{Гос.знак}", output.Split(';')[4], Document);
+                    Replace("{VIN-номер}", output.Split(';')[5], Document);
+                    Replace("{Стоимость авто}", output.Split(';')[6], Document);
+                    Replace("{Дата начала}", output.Split(';')[7], Document);
+                    Replace("{Дата окончания}", output.Split(';')[8], Document);
+                    Replace("{Дата начала}", output.Split(';')[7], Document);
+                    Replace("{Дата окончания}", output.Split(';')[8], Document);
+                    Replace("{Сумма}", output.Split(';')[9], Document);
+                    Replace("{Паспорт}", output.Split(';')[10], Document);
+                    Replace("{Ид номер}", output.Split(';')[11], Document);
+                    Replace("{Телефон}", output.Split(';')[12], Document);
+                    Replace("{Email}", output.Split(';')[13], Document);
+                    Replace("{Дата}", output.Split(';')[14], Document);
+                    Document.SaveAs(fileName);
+                    WordApp.Visible = true;
                 }
-                else
+                catch (Exception ex)
                 {
-                    //MessageBox.Show("Отсутствует график работы" + '\n' + "для данной должности на выбранный вами год." + '\n' + "Пожалуйста заполните график работы для данной должности.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Marshal.ReleaseComObject(Documents);
+                    Marshal.ReleaseComObject(Document);
+                    Marshal.ReleaseComObject(WordApp);
+                }
+                finally
+                {
+                    Marshal.ReleaseComObject(Documents);
+                    Marshal.ReleaseComObject(Document);
+                    Marshal.ReleaseComObject(WordApp);
+                }
+            }
+        }
+
+        public void Print_Acts(SaveFileDialog saveFileDialog, string ID)
+        {
+            WordApplication WordApp = null;
+            Documents Documents = null;
+            Document Document = null;
+            string output = null;
+            string fileName = null;
+            saveFileDialog.Title = "Сохранить договор как";
+            output = Select_Text(MySqlQueries.Select_Print_Dogovory, ID);
+            saveFileDialog.FileName = "Договор " + output.Split(';')[0];
+            saveFileDialog.InitialDirectory = Application.StartupPath + "\\Договоры\\";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    fileName = saveFileDialog.FileName;
+                    WordApp = new WordApplication();
+                    Documents = WordApp.Documents;
+                    Document = Documents.Open(Application.StartupPath + "\\blanks\\Dogovor.docx");
+                    Replace("{Договор}", output.Split(';')[0], Document);
+                    Replace("{Сотрудник}", output.Split(';')[1], Document);
+                    Replace("{Клиент}", output.Split(';')[2], Document);
+                    Replace("{Клиент}", output.Split(';')[2], Document);
+                    Replace("{Авто}", output.Split(';')[3], Document);
+                    Replace("{Гос.знак}", output.Split(';')[4], Document);
+                    Replace("{VIN-номер}", output.Split(';')[5], Document);
+                    Replace("{Стоимость авто}", output.Split(';')[6], Document);
+                    Replace("{Дата начала}", output.Split(';')[7], Document);
+                    Replace("{Дата окончания}", output.Split(';')[8], Document);
+                    Replace("{Дата начала}", output.Split(';')[7], Document);
+                    Replace("{Дата окончания}", output.Split(';')[8], Document);
+                    Replace("{Сумма}", output.Split(';')[9], Document);
+                    Replace("{Паспорт}", output.Split(';')[10], Document);
+                    Replace("{Ид номер}", output.Split(';')[11], Document);
+                    Replace("{Телефон}", output.Split(';')[12], Document);
+                    Replace("{Email}", output.Split(';')[13], Document);
+                    Replace("{Дата}", output.Split(';')[14], Document);
+                    Document.SaveAs(fileName);
+                    WordApp.Visible = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Marshal.ReleaseComObject(Documents);
+                    Marshal.ReleaseComObject(Document);
+                    Marshal.ReleaseComObject(WordApp);
+                }
+                finally
+                {
+                    Marshal.ReleaseComObject(Documents);
+                    Marshal.ReleaseComObject(Document);
+                    Marshal.ReleaseComObject(WordApp);
                 }
             }
         }

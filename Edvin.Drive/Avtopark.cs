@@ -41,7 +41,7 @@ namespace Edvin.Drive
         {
             if (textBox1.Text != "" && maskedTextBox1.Text.Length == 8 && maskedTextBox2.Text.Length == 17)
             {
-                MySqlOperations.Insert_Update_Delete(MySqlQueries.Insert_Avtopark, null, comboBox1.Text, textBox1.Text, comboBox2.Text, MySqlOperations.Select_Text(MySqlQueries.Select_Price_ID,null,comboBox3.Text),maskedTextBox1.Text,maskedTextBox2.Text);
+                MySqlOperations.Insert_Update_Delete(MySqlQueries.Insert_Avtopark, null, comboBox1.Text, textBox1.Text, comboBox2.Text, MySqlOperations.Select_Text(MySqlQueries.Select_Price_ID,null,comboBox3.Text),maskedTextBox1.Text,maskedTextBox2.Text,numericUpDown1.Value.ToString());
                 this.Close();
             }
             else
@@ -57,7 +57,7 @@ namespace Edvin.Drive
         {
             if (textBox1.Text != "" && maskedTextBox1.Text.Length == 8 && maskedTextBox2.Text.Length == 17)
             {
-                MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Avtopark, ID, comboBox1.Text, textBox1.Text, comboBox2.Text, MySqlOperations.Select_Text(MySqlQueries.Select_Price_ID, null, comboBox3.Text), maskedTextBox1.Text, maskedTextBox2.Text);
+                MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Avtopark, ID, comboBox1.Text, textBox1.Text, comboBox2.Text, MySqlOperations.Select_Text(MySqlQueries.Select_Price_ID, null, comboBox3.Text), maskedTextBox1.Text, maskedTextBox2.Text,numericUpDown1.Value.ToString());
                 this.Close();
             }
             else

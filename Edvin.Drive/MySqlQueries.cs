@@ -4,7 +4,7 @@
     {
         //Select
         public string Select_Avtopark = $@"SELECT avtopark.ID_Avto, avtopark.Marka AS 'Марка', avtopark.Model AS 'Модель', avtopark.Categoria_Avto AS 'Категория авто',
-price.Name AS 'Пакет', avtopark.Gos_Znak AS 'Гос. знак', avtopark.VIN_Nomer AS 'VIN номер', avtopark.Identify AS 'Идентификатор'
+price.Name AS 'Пакет', avtopark.Gos_Znak AS 'Гос. знак', avtopark.VIN_Nomer AS 'VIN номер', avtopark.Stoimost AS 'Балансовая стоимость, $', avtopark.Identify AS 'Идентификатор'
 FROM avtopark INNER JOIN price ON avtopark.ID_Price = price.ID_Price;";
 
         public string Select_Clienty = $@"SELECT clienty.ID_Clienta, CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo) AS 'Ф.И.О. Клиента',
@@ -106,6 +106,18 @@ if(avtopark.Categoria_Avto = 'B', 3,
 if(avtopark.Categoria_Avto = 'C', 4,
 if(avtopark.Categoria_Avto = 'D', 5, 6)))))) 
 FROM avtopark WHERE avtopark.ID_Avto = @ID;";
+
+        public string Select_Print_Dogovory = $@"SET lc_time_names = 'ru_RU';
+SELECT CONCAT(CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date,'%d %M %Y')),';',
+CONCAT(sotrudniki.Familiya, ' ', sotrudniki.Imya, ' ', sotrudniki.Otchestvo),';',
+CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo),';',
+CONCAT(avtopark.Marka, ' ', avtopark.Model),';',
+avtopark.Gos_Znak,';', avtopark.VIN_Nomer,';', avtopark.Stoimost,';', DATE_FORMAT(dogovory.N_Arendy,'%d %M %Y'),';', DATE_FORMAT(dogovory.K_Arendy,'%d %M %Y'),';', dogovory.Summa,';',
+clienty.Nom_Pass,';',clienty.Ident_Nom,';',clienty.Telephone,';',clienty.Email,';',DATE_FORMAT(dogovory.Date,'%d %M %Y'))
+FROM dogovory INNER JOIN clienty ON dogovory.ID_Clienta = clienty.ID_Clienta
+INNER JOIN sotrudniki ON dogovory.ID_Sotrudnika = sotrudniki.ID_Sotrudnika
+INNER JOIN avtopark ON dogovory.ID_Avto = avtopark.ID_Avto
+WHERE dogovory.ID_Dogovora = @ID;";
         //Select
 
         //Insert
@@ -113,7 +125,7 @@ FROM avtopark WHERE avtopark.ID_Avto = @ID;";
 
         public string Insert_Price = $@"INSERT INTO price (Name, Stoimost, Skidka) VALUES (@Value1, @Value2, @Value3);";
 
-        public string Insert_Avtopark = $@"INSERT INTO avtopark (Marka, Model, Categoria_Avto, ID_Price, Gos_Znak, VIN_Nomer) VALUES(@Value1, @Value2, @Value3, @Value4, @Value5, @Value6);";
+        public string Insert_Avtopark = $@"INSERT INTO avtopark (Marka, Model, Categoria_Avto, ID_Price, Gos_Znak, VIN_Nomer, Stoimost) VALUES(@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7);";
 
         public string Insert_Sotrudniki = $@"INSERT INTO sotrudniki (Familiya, Imya, Otchestvo, ID_Doljnosti, Telephone) VALUES (@Value1, @Value2, @Value3, @Value4, @Value5);";
 
@@ -131,7 +143,7 @@ FROM avtopark WHERE avtopark.ID_Avto = @ID;";
 
         public string Update_Price = $@"UPDATE price SET Name = @Value1, Stoimost = @Value2, Skidka = @Value3 WHERE ID_Price = @ID;";
 
-        public string Update_Avtopark = $@"UPDATE avtopark SET Marka = @Value1, Model = @Value2, Categoria_Avto= @Value3, ID_Price = @Value4, Gos_Znak = @Value5, VIN_Nomer = @Value6 WHERE ID_Avto = @ID;";
+        public string Update_Avtopark = $@"UPDATE avtopark SET Marka = @Value1, Model = @Value2, Categoria_Avto= @Value3, ID_Price = @Value4, Gos_Znak = @Value5, VIN_Nomer = @Value6, Stoimost = @Value7 WHERE ID_Avto = @ID;";
 
         public string Update_Sotrudniki = $@"UPDATE sotrudniki SET Familiya = @Value1, Imya = @Value2, Otchestvo = @Value3, ID_Doljnosti = @Value4, Telephone = @Value5 WHERE ID_Sotrudnika = @ID;";
 
