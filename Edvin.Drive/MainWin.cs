@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Windows.Forms;
+using WindowState = System.Windows.Forms.FormWindowState;
 
 namespace Edvin.Drive
 {
@@ -553,6 +554,20 @@ namespace Edvin.Drive
             {
                 for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
                     MySqlOperations.Print_Acts(saveFileDialog1, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
+            }
+        }
+
+        private void MainWin_SizeChanged(object sender, EventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                dataGridView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12);
+                menuStrip1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12);
+            }
+            else if (this.WindowState == WindowState.Normal)
+            {
+                dataGridView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8);
+                menuStrip1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8);
             }
         }
     }
