@@ -29,34 +29,48 @@ namespace Edvin.Drive
         {
             if (maskedTextBox2.Text.Length == 9)
             {
-                string am = "Нет";
-                string a1 = "Нет";
-                string a = "Нет";
-                string b = "Нет";
-                string c = "Нет";
-                string d = "Нет";
-                BoolToString(ref am, ref a1, ref a, ref b, ref c, ref d);
-                    MySqlOperations.Insert_Update_Delete(MySqlQueries.Insert_Prava, null, MySqlOperations.Select_Text(MySqlQueries.Select_Clienty_ID, null, comboBox3.Text), maskedTextBox2.Text, am, a1, a, b, c, d);
-                    this.Close();
+                MySqlOperations.Insert_Update_Delete(MySqlQueries.Insert_Prava, null, MySqlOperations.Select_Text(MySqlQueries.Select_Clienty_ID, null, comboBox3.Text), maskedTextBox2.Text, Otkr_Categorii());
+                this.Close();
             }
             else
                 MessageBox.Show("Проверьте, все ли поля заполнены.", "Предупрждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        private void BoolToString(ref string am, ref string a1, ref string a, ref string b, ref string c, ref string d)
+        public string Otkr_Categorii()
         {
+            string Otkr_Categorii = string.Empty;
             if (checkBox1.Checked)
-                am = "Есть";
+                Otkr_Categorii += "AM ";
             if (checkBox2.Checked)
-                a1 = "Есть";
+                Otkr_Categorii += "A1 ";
             if (checkBox3.Checked)
-                a = "Есть";
+                Otkr_Categorii += "A ";
             if (checkBox4.Checked)
-                b = "Есть";
+                Otkr_Categorii += "B ";
             if (checkBox5.Checked)
-                c = "Есть";
+                Otkr_Categorii += "C ";
             if (checkBox6.Checked)
-                d = "Есть";
+                Otkr_Categorii += "D ";
+            return Otkr_Categorii.Remove(Otkr_Categorii.Length-1,1);
+        }
+
+        public void Check_Otkr_Categorii(string Otkr_Categorii)
+        {
+            foreach (string Categoriya in Otkr_Categorii.Split(' ')) 
+            {
+                if (Categoriya == "AM")
+                    checkBox1.Checked = true;
+                if (Categoriya == "A1")
+                    checkBox2.Checked = true;
+                if (Categoriya == "A")
+                    checkBox3.Checked = true;
+                if (Categoriya == "B")
+                    checkBox4.Checked = true;
+                if (Categoriya == "C")
+                    checkBox5.Checked = true;
+                if (Categoriya == "D")
+                    checkBox6.Checked = true;
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -68,14 +82,7 @@ namespace Edvin.Drive
         {
             if (maskedTextBox2.Text.Length == 9)
             {
-                string am = "Нет";
-                string a1 = "Нет";
-                string a = "Нет";
-                string b = "Нет";
-                string c = "Нет";
-                string d = "Нет";
-                BoolToString(ref am, ref a1, ref a, ref b, ref c, ref d);
-                MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Prava, ID, MySqlOperations.Select_Text(MySqlQueries.Select_Clienty_ID, null, comboBox3.Text), maskedTextBox2.Text, am, a1, a, b, c, d);
+                MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Prava, ID, MySqlOperations.Select_Text(MySqlQueries.Select_Clienty_ID, null, comboBox3.Text), maskedTextBox2.Text, Otkr_Categorii());
                 this.Close();
             }
             else

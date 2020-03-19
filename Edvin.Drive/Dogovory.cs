@@ -22,8 +22,8 @@ namespace Edvin.Drive
             MySqlQueries = mySqlQueries;
             ID = iD;
             MySqlOperations.Select_ComboBox(MySqlQueries.Select_Sotrudniki_ComboBox, comboBox1);
-            MySqlOperations.Select_ComboBox(MySqlQueries.Select_Clienty_ComboBox, comboBox2);
             MySqlOperations.Select_ComboBox(MySqlQueries.Select_Avtopark_ComboBox, comboBox3);
+            MySqlOperations.Select_ComboBox(MySqlQueries.Select_Clienty_ComboBox, comboBox2);
             dateTimePicker1.Value = DateTime.Now;
         }
 
@@ -33,23 +33,19 @@ namespace Edvin.Drive
             {
                 if (MySqlOperations.Select_Text(MySqlQueries.Select_Identify_Avto, MySqlOperations.Select_Text(MySqlQueries.Select_Avtopark_ID, null, comboBox3.Text)) != "Занята")
                 {
-
-                    string[] Otkr_Kat = MySqlOperations.Select_Text(MySqlQueries.Select_Prava_Clienty, MySqlOperations.Select_Text(MySqlQueries.Select_Clienty_ID, null, comboBox2.Text)).Split(';');
-                    int Kat_Avto = int.Parse(MySqlOperations.Select_Text(MySqlQueries.Select_Kat_Avto, MySqlOperations.Select_Text(MySqlQueries.Select_Avtopark_ID, null, comboBox3.Text)));
-                    if (Otkr_Kat[Kat_Avto] == "Есть")
-                    {
-                        MySqlOperations.Insert_Update_Delete(MySqlQueries.Insert_Dogovory, null,
-                            MySqlOperations.Select_Text(MySqlQueries.Select_Sotrudniki_ID, null, comboBox1.Text),
-                            MySqlOperations.Select_Text(MySqlQueries.Select_Clienty_ID, null, comboBox2.Text),
-                            dateTimePicker1.Value.Year.ToString() + "-" + dateTimePicker1.Value.Month.ToString() + "-" + dateTimePicker1.Value.Day.ToString(),
-                            dateTimePicker2.Value.Year.ToString() + "-" + dateTimePicker2.Value.Month.ToString() + "-" + dateTimePicker2.Value.Day.ToString(),
-                            textBox1.Text.Replace(',', '.'), MySqlOperations.Select_Text(MySqlQueries.Select_Avtopark_ID, null, comboBox3.Text),
-                            DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Day.ToString());
-                        MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identify_Avtopark1, MySqlOperations.Select_Text(MySqlQueries.Select_Avtopark_ID, null, comboBox3.Text));
-                        this.Close();
-                    }
+                    MySqlOperations.Insert_Update_Delete(MySqlQueries.Insert_Dogovory, null,
+                        MySqlOperations.Select_Text(MySqlQueries.Select_Sotrudniki_ID, null, comboBox1.Text),
+                        MySqlOperations.Select_Text(MySqlQueries.Select_Clienty_ID, null, comboBox2.Text),
+                        dateTimePicker1.Value.Year.ToString() + "-" + dateTimePicker1.Value.Month.ToString() + "-" + dateTimePicker1.Value.Day.ToString(),
+                        dateTimePicker2.Value.Year.ToString() + "-" + dateTimePicker2.Value.Month.ToString() + "-" + dateTimePicker2.Value.Day.ToString(),
+                        textBox1.Text.Replace(',', '.'), MySqlOperations.Select_Text(MySqlQueries.Select_Avtopark_ID, null, comboBox3.Text),
+                        DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Day.ToString());
+                    MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identify_Avtopark1, MySqlOperations.Select_Text(MySqlQueries.Select_Avtopark_ID, null, comboBox3.Text));
+                    if (MessageBox.Show("Хотите оформить акт осмотра?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        this.DialogResult = DialogResult.Yes;
                     else
-                        MessageBox.Show("Данный клиент не имеет права вождения автомобилей данной категории.","Предупреждение", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                        this.DialogResult = DialogResult.No;
+                    this.Close();
                 }
                 else
                     MessageBox.Show("На данный момент выбранный автомобиль занят.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -92,5 +88,15 @@ namespace Edvin.Drive
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e) => dateTimePicker2.Value = dateTimePicker1.Value.AddDays(1);
 
         private void dateTimePicker2_ValueChanged(object sender, EventArgs e) => Summa();
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string output = string.Empty;
+            foreach (string Categoriya in MySqlOperations.Select_Text(MySqlQueries.Select_Prava_Clienty,MySqlOperations.Select_Text(MySqlQueries.Select_Clienty_ID,null,comboBox2.Text)).Split(' '))
+            {
+                output += "'" + Categoriya + "',";
+            }
+            MySqlOperations.Select_ComboBox(MySqlQueries.Select_Avtopark_ComboBox1 + output.Remove(output.Length - 1, 1) + ");", comboBox3 );
+        }
     }
 }

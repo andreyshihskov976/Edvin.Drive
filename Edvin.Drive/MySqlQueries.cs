@@ -25,7 +25,7 @@ INNER JOIN sotrudniki ON sotrudniki.ID_Sotrudnika = dogovory.ID_Sotrudnika;";
 FROM doljnosti;";
 
         public string Select_Prava = $@"SELECT prava.ID_Prav, CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo) AS 'Ф.И.О. Клиенты',
-prava.Nom_VodPrav AS 'Номер В/У', prava.AM AS 'АМ', prava.A1 AS 'А1', prava.A AS 'А', prava.B AS 'B', prava.C AS 'C', prava.D AS 'D'
+prava.Nom_VodPrav AS 'Номер В/У', prava.Otkr_Categorii AS 'Открытые категории'
 FROM prava INNER JOIN clienty ON prava.ID_Clienta = clienty.ID_Clienta;";
 
         public string Select_Price = $@"SELECT price.ID_Price, price.Name AS 'Наименование пакета', price.Stoimost AS 'Стоимость', price.Skidka AS 'Скидка'
@@ -64,6 +64,8 @@ WHERE prava.ID_Clienta IS NULL;";
 
         public string Select_Avtopark_ComboBox = $@"SELECT CONCAT(avtopark.Marka, ' ',avtopark.Model,' ',avtopark.Gos_Znak) FROM avtopark;";
 
+        public string Select_Avtopark_ComboBox1 = $@"SELECT CONCAT(avtopark.Marka, ' ',avtopark.Model,' ',avtopark.Gos_Znak) FROM avtopark WHERE avtopark.Identify = 'Свободна' AND avtopark.Categoria_Avto IN (";
+
         public string Select_Avtopark_ID = $@"SELECT avtopark.ID_Avto FROM avtopark WHERE CONCAT(avtopark.Marka, ' ',avtopark.Model,' ',avtopark.Gos_Znak) = @Value1;";
 
         public string Select_Avto_Dogovora = $@"SELECT CONCAT(avtopark.Marka, ' ',avtopark.Model,' ',avtopark.Gos_Znak) 
@@ -71,7 +73,19 @@ FROM dogovory
 INNER JOIN avtopark ON dogovory.ID_Avto = avtopark.ID_Avto
 WHERE CONCAT('№ ', dogovory.ID_Dogovora, ' от ', dogovory.Date) = @Value1;";
 
-        public string Select_Dogovory_ComboBox = $@"SET lc_time_names = 'ru_RU'; SELECT CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date,'%d %M %Y')) FROM dogovory;";
+        public string Select_Dogovory_ComboBox = $@"SET lc_time_names = 'ru_RU'; 
+SELECT CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date,'%d %M %Y')) 
+FROM dogovory;";
+
+        public string Select_Deistv_Dogovory_ComboBox = $@"SET lc_time_names = 'ru_RU'; 
+SELECT CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date,'%d %M %Y')) 
+FROM dogovory
+WHERE dogovory.Identify = 'Действительный';";
+
+        public string Select_Nedeistv_Dogovory_ComboBox = $@"SET lc_time_names = 'ru_RU'; 
+SELECT CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date,'%d %M %Y')) 
+FROM dogovory
+WHERE dogovory.Identify = 'Не действительный';";
 
         public string Select_Dogovory_ID = $@"SET lc_time_names = 'ru_RU'; SELECT dogovory.ID_Dogovora FROM dogovory WHERE CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date,'%d %M %Y')) = @Value1;";
 
@@ -79,6 +93,10 @@ WHERE CONCAT('№ ', dogovory.ID_Dogovora, ' от ', dogovory.Date) = @Value1;";
 
         public string Select_Exists_Nedeistv_Dogovory = $@"SELECT EXISTS(SELECT * 
 FROM dogovory WHERE dogovory.K_Arendy < CURDATE() AND dogovory.Identify = 'Действительный');";
+
+        public string Select_Exists_ActSdachi = $@"SELECT EXISTS(SELECT * FROM acts WHERE acts.ID_Dogovora = @ID AND acts.Name = 'Акт осмотра автомобиля при сдаче в аренду');";
+
+        public string Select_Exists_ActPriema = $@"SELECT EXISTS(SELECT * FROM acts WHERE acts.ID_Dogovora = @ID AND acts.Name = 'Акт осмотра автомобиля при приеме из аренды');";
 
         public string Select_List_Nedeistv_Dogovory = $@"SET lc_time_names = 'ru_RU';
 SELECT CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date,'%d %M %Y')) 
@@ -94,8 +112,7 @@ WHERE dogovory.Identify = 'Не действительный';";
 
         public string Select_Comments_Act = $@"SELECT acts.Comments FROM acts WHERE acts.ID_Act = @ID;";
 
-        public string Select_Prava_Clienty = $@"SELECT CONCAT(prava.AM,';',prava.A1,';',prava.A,';',prava.B,';',prava.C,';',prava.D) 
-FROM prava 
+        public string Select_Prava_Clienty = $@"SELECT prava.Otkr_Categorii FROM prava 
 INNER JOIN clienty ON prava.ID_Clienta = clienty.ID_Clienta
 WHERE clienty.ID_Clienta = @ID;";
 
@@ -123,7 +140,7 @@ WHERE dogovory.ID_Dogovora = @ID;";
 SELECT CONCAT(CONCAT(acts.Name,' №',acts.ID_Act,' от ', DATE_FORMAT(acts.Date, '%d %M %Y')),';', 
 CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date,'%d %M %Y')),';',
 CONCAT(sotrudniki.Familiya, ' ', sotrudniki.Imya, ' ', sotrudniki.Otchestvo),';',
-CONCAT(avtopark.Marka, ' ', avtopark.Model,' Гос. знак: ',
+CONCAT(avtopark.Marka, ' ', avtopark.Model,', Гос. знак: ',
 avtopark.Gos_Znak,', VIN-номер: ', avtopark.VIN_Nomer),';',
 CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo),';',
 acts.Comments)
@@ -131,10 +148,12 @@ FROM acts INNER JOIN dogovory ON acts.ID_Dogovora = dogovory.ID_Dogovora
 INNER JOIN avtopark ON dogovory.ID_Avto = avtopark.ID_Avto
 INNER JOIN sotrudniki ON dogovory.ID_Sotrudnika = sotrudniki.ID_Sotrudnika
 INNER JOIN clienty ON dogovory.ID_Clienta = clienty.ID_Clienta
-WHERE acts.ID_Act = '3';";
+WHERE acts.ID_Act = @ID;";
 
         public string Select_Dogovor = $@"SET lc_time_names = 'ru_RU';
 SELECT CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date, '%d %M %Y')) FROM dogovory WHERE dogovory.ID_Dogovora = @ID;";
+
+        public string Select_Last_Insert_Dogovor = $@"SELECT LAST_INSERT_ID();";
         //Select
 
         //Insert
@@ -148,7 +167,7 @@ SELECT CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date, '%
 
         public string Insert_Clienty = $@"INSERT INTO clienty (Familiya, Imya, Otchestvo, Telephone, Email, Nom_Pass, Ident_Nom) VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7);";
 
-        public string Insert_Prava = $@"INSERT INTO prava (ID_Clienta, Nom_VodPrav, AM, A1, A, B, C, D) VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7, @Value8);";
+        public string Insert_Prava = $@"INSERT INTO prava (ID_Clienta, Nom_VodPrav, Otkr_Categorii) VALUES (@Value1, @Value2, @Value3);";
 
         public string Insert_Dogovory = $@"INSERT INTO dogovory (ID_Sotrudnika, ID_Clienta, N_Arendy, K_Arendy, Summa, ID_Avto, Date) VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7);";
 
@@ -166,7 +185,7 @@ SELECT CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date, '%
 
         public string Update_Clienty = $@"UPDATE clienty SET Familiya = @Value1, Imya= @Value2, Otchestvo = @Value3, Telephone = @Value4, Email = @Value5, Nom_Pass = @Value6, Ident_Nom= @Value7 WHERE ID_Clienta = @ID;";
 
-        public string Update_Prava = $@"UPDATE prava SET ID_Clienta = @Value1, Nom_VodPrav = @Value2, AM = @Value3, A1 = @Value4, A = @Value5, B= @Value6, C = @Value7, D = @Value8 WHERE ID_Prav = @ID;";
+        public string Update_Prava = $@"UPDATE prava SET ID_Clienta = @Value1, Nom_VodPrav = @Value2, Otkr_Categorii = @Value3 WHERE ID_Prav = @ID;";
 
         public string Update_Dogovory = $@"UPDATE dogovory SET ID_Sotrudnika = @Value1, ID_Clienta = @Value2, N_Arendy = @Value3, K_Arendy = @Value4, Summa = @Value5, ID_Avto = @Value6 WHERE ID_Dogovora = @ID;";
 

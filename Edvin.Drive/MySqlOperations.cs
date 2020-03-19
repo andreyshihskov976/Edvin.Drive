@@ -9,6 +9,8 @@ using System.Collections;
 using Application = System.Windows.Forms.Application;
 using ExcelApplication = Microsoft.Office.Interop.Excel.Application;
 using WordApplication = Microsoft.Office.Interop.Word.Application;
+using System.Threading.Tasks;
+using System.Reflection;
 
 namespace Edvin.Drive
 {
@@ -62,10 +64,11 @@ namespace Edvin.Drive
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        public void Select_ComboBox(string query, ComboBox comboBox)
+        public void Select_ComboBox(string query, ComboBox comboBox, string ID = null, object Value1 = null)
         {
             try
             {
+                comboBox.Items.Clear();
                 sqlCommand = new MySqlCommand(query, mySqlConnection);
                 sqlDataReader = sqlCommand.ExecuteReader();
                 while (sqlDataReader.Read())
@@ -99,33 +102,6 @@ namespace Edvin.Drive
                 }
             }
         }
-
-        //public string Select_ID_From_ComboBox(string query, string Value)
-        //{
-        //    string ID = null;
-        //    try
-        //    {
-        //        sqlCommand = new MySqlCommand(query, mySqlConnection);
-        //        sqlCommand.Parameters.AddWithValue("Value1", Value);
-        //        sqlDataReader = sqlCommand.ExecuteReader();
-        //        while (sqlDataReader.Read())
-        //        {
-        //            ID = Convert.ToString(sqlDataReader[0]);
-        //            break;
-        //        }
-        //        return ID;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //        return null;
-        //    }
-        //    finally
-        //    {
-        //        if (sqlDataReader != null)
-        //            sqlDataReader.Close();
-        //    }
-        //}
 
         public string Select_Text(string query, string ID = null, string Value1 = null, string Value2 = null, string Value3 = null, string Value4 = null, string Value5 = null, string Value6 = null, string Value7 = null, string Value8 = null)
         {
@@ -164,7 +140,6 @@ namespace Edvin.Drive
 
         public void Select_List(string query,ref ArrayList list, string ID = null, string Value1 = null, string Value2 = null, string Value3 = null, string Value4 = null, string Value5 = null, string Value6 = null, string Value7 = null, string Value8 = null)
         {
-            //string output = string.Empty;
             try
             {
                 sqlCommand = new MySqlCommand(query, mySqlConnection);
@@ -182,12 +157,10 @@ namespace Edvin.Drive
                 {
                     list.Add(Convert.ToString(sqlDataReader[0]));
                 }
-                //return output;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //return string.Empty;
             }
             finally
             {
@@ -347,7 +320,7 @@ namespace Edvin.Drive
                     Replace("{Договор}", output.Split(';')[1], Document);
                     Replace("{Сотрудник}", output.Split(';')[2], Document);
                     Replace("{Сотрудник}", output.Split(';')[2], Document);
-                    Replace("{Авто}", output.Split(';')[3], Document);
+                    Replace("{Автомобиль}", output.Split(';')[3], Document);
                     Replace("{Клиент}", output.Split(';')[4], Document);
                     Replace("{Клиент}", output.Split(';')[4], Document);
                     Replace("{Комментарий}", output.Split(';')[5], Document);
@@ -368,6 +341,35 @@ namespace Edvin.Drive
                     Marshal.ReleaseComObject(WordApp);
                 }
             }
+        }
+
+        public static Task<object> GetTaskFromEvent(object @object, string @event)
+        {
+            if (@object == null || @event == null) throw new ArgumentNullException("Arguments cannot be null");
+
+            EventInfo EventInfo = @object.GetType().GetEvent(@event);
+            if (EventInfo == null)
+            {
+                throw new ArgumentException(String.Format("*{0}* has no *{1}* event", @object, @event));
+            }
+
+            TaskCompletionSource<object> TaskComleteSource = new TaskCompletionSource<object>();
+            MethodInfo MethodInfo = null;
+            Delegate Delegate = null;
+            EventHandler Handler = null;
+
+            Handler = (s, e) =>
+            {
+                MethodInfo = Handler.Method;
+                Delegate = Delegate.CreateDelegate(EventInfo.EventHandlerType, Handler.Target, MethodInfo);
+                EventInfo.RemoveEventHandler(s, Delegate);
+                TaskComleteSource.TrySetResult(null);
+            };
+
+            MethodInfo = Handler.Method;
+            Delegate = Delegate.CreateDelegate(EventInfo.EventHandlerType, Handler.Target, MethodInfo);
+            EventInfo.AddEventHandler(@object, Delegate);
+            return TaskComleteSource.Task;
         }
     }
 }
