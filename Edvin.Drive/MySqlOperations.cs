@@ -190,7 +190,9 @@ namespace Edvin.Drive
             }
         }
 
-        public void Insert_Update_Delete(string query, string ID = null, string Value1 = null, string Value2 = null, string Value3 = null, string Value4 = null, string Value5 = null, string Value6 = null, string Value7 = null, string Value8 = null)
+        public void Insert_Update_Delete(string query, string ID = null, string Value1 = null, string Value2 = null, 
+            string Value3 = null, string Value4 = null, string Value5 = null, string Value6 = null, 
+            string Value7 = null, string Value8 = null)
         {
             try
             {
