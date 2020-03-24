@@ -43,7 +43,6 @@
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.label7 = new System.Windows.Forms.Label();
-            this.button4 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
@@ -53,7 +52,7 @@
             this.button3.Location = new System.Drawing.Point(3, 198);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(215, 26);
-            this.button3.TabIndex = 37;
+            this.button3.TabIndex = 8;
             this.button3.Text = "Редактировать";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -65,7 +64,7 @@
             this.button2.Location = new System.Drawing.Point(224, 198);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(215, 26);
-            this.button2.TabIndex = 36;
+            this.button2.TabIndex = 9;
             this.button2.Text = "Отмена";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -76,7 +75,7 @@
             this.button1.Location = new System.Drawing.Point(3, 198);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(215, 26);
-            this.button1.TabIndex = 35;
+            this.button1.TabIndex = 7;
             this.button1.Text = "Добавить";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -89,7 +88,7 @@
             this.comboBox3.Location = new System.Drawing.Point(224, 132);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(215, 28);
-            this.comboBox3.TabIndex = 39;
+            this.comboBox3.TabIndex = 5;
             this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
             // 
             // label6
@@ -110,7 +109,7 @@
             this.comboBox1.Location = new System.Drawing.Point(224, 3);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(215, 28);
-            this.comboBox1.TabIndex = 41;
+            this.comboBox1.TabIndex = 1;
             // 
             // label1
             // 
@@ -130,7 +129,7 @@
             this.comboBox2.Location = new System.Drawing.Point(224, 37);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(215, 28);
-            this.comboBox2.TabIndex = 43;
+            this.comboBox2.TabIndex = 2;
             this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // label2
@@ -181,7 +180,7 @@
             this.dateTimePicker1.Location = new System.Drawing.Point(224, 71);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(215, 26);
-            this.dateTimePicker1.TabIndex = 47;
+            this.dateTimePicker1.TabIndex = 3;
             this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
             // 
             // dateTimePicker2
@@ -192,7 +191,7 @@
             this.dateTimePicker2.Location = new System.Drawing.Point(224, 103);
             this.dateTimePicker2.Name = "dateTimePicker2";
             this.dateTimePicker2.Size = new System.Drawing.Size(215, 26);
-            this.dateTimePicker2.TabIndex = 48;
+            this.dateTimePicker2.TabIndex = 4;
             this.dateTimePicker2.ValueChanged += new System.EventHandler(this.dateTimePicker2_ValueChanged);
             // 
             // label7
@@ -205,19 +204,6 @@
             this.label7.TabIndex = 50;
             this.label7.Text = "рублей";
             // 
-            // button4
-            // 
-            this.button4.AutoSize = true;
-            this.button4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.button4.Location = new System.Drawing.Point(399, 166);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(30, 30);
-            this.button4.TabIndex = 51;
-            this.button4.Text = "X";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
@@ -225,7 +211,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(100, 26);
-            this.textBox1.TabIndex = 52;
+            this.textBox1.TabIndex = 6;
             // 
             // Dogovory
             // 
@@ -236,7 +222,6 @@
             this.CancelButton = this.button2;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button4);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.dateTimePicker2);
             this.Controls.Add(this.dateTimePicker1);
@@ -279,7 +264,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Button button4;
         public System.Windows.Forms.TextBox textBox1;
         public System.Windows.Forms.DateTimePicker dateTimePicker1;
         public System.Windows.Forms.DateTimePicker dateTimePicker2;

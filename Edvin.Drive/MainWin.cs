@@ -1,5 +1,8 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections;
+using System.Data;
+using System.Data.Common;
 using System.Windows.Forms;
 using WindowState = System.Windows.Forms.FormWindowState;
 
@@ -86,48 +89,84 @@ namespace Edvin.Drive
             dataGridView1.Columns[0].Visible = false;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void действительныйToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MySqlOperations.OpenConnection();
-            MySqlOperations.Select_DataGridView(MySqlQueries.Select_Dogovory, dataGridView1);
+            MySqlOperations.Select_DataGridView(MySqlQueries.Select_Dogovory_Deistv, dataGridView1);
             identify = "dogovory";
             dataGridView1.Columns[0].Visible = false;
-            if (MySqlOperations.Select_Text(MySqlQueries.Select_Exists_Nedeistv_Dogovory) == "1")
+        }
+
+        private void неДействительныеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MySqlOperations.Select_DataGridView(MySqlQueries.Select_Dogovory_Nedeistv, dataGridView1);
+            identify = "dogovory";
+            dataGridView1.Columns[0].Visible = false;
+        }
+
+        private void актыПриСдачеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MySqlOperations.Select_DataGridView(MySqlQueries.Select_Acts_Sdachi, dataGridView1);
+            identify = "acts";
+            dataGridView1.Columns[0].Visible = false;
+        }
+
+        private void актыПриПриемеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MySqlOperations.Select_DataGridView(MySqlQueries.Select_Acts_Priema, dataGridView1);
+            identify = "acts";
+            dataGridView1.Columns[0].Visible = false;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            try
             {
-                ArrayList list = new ArrayList();
-                MySqlOperations.Select_List(MySqlQueries.Select_List_Nedeistv_Dogovory, ref list);
-                int Count = 0;
-                foreach (var s in list)
+                MySqlOperations.OpenConnection();
+                MySqlOperations.Select_DataGridView(MySqlQueries.Select_Dogovory, dataGridView1);
+                identify = "dogovory";
+                dataGridView1.Columns[0].Visible = false;
+                if (MySqlOperations.Select_Text(MySqlQueries.Select_Exists_Nedeistv_Dogovory) == "1")
                 {
-                    if (MessageBox.Show("Договор " + s.ToString() +" прекращает своё действие. Желаете его закрыть и оформить акт осмотра авто?", "Вопрос",MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    ArrayList list = new ArrayList();
+                    MySqlOperations.Select_List(MySqlQueries.Select_List_Nedeistv_Dogovory, ref list);
+                    int Count = 0;
+                    foreach (var s in list)
                     {
-                        MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identify_Dogovory, s.ToString().Split(' ')[1]);
-                        MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identyfy_Avtopark, s.ToString().Split(' ')[1]);
-                        MySqlOperations.Select_DataGridView(MySqlQueries.Select_Dogovory, dataGridView1);
-                        dataGridView1.Columns[0].Visible = false;
-                        Acts acts = new Acts(MySqlOperations, MySqlQueries);
-                        acts.button1.Visible = true;
-                        acts.button3.Visible = false;
-                        acts.AcceptButton = acts.button1;
-                        acts.comboBox1.SelectedItem = acts.comboBox1.Items[1];
-                        MySqlOperations.Search_In_ComboBox(s.ToString(), acts.comboBox2);
-                        acts.comboBox1.Enabled = false;
-                        acts.comboBox2.Enabled = false;
-                        acts.comboBox3.Enabled = false;
-                        acts.comboBox4.Enabled = false;
-                        acts.Acts_Closed += актыToolStripMenuItem_Click;
-                        acts.Owner = this;
-                        acts.Show();
-                        Count++;
-                    }
-                    else
-                    {
-                        MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_K_Date_Dogovory, s.ToString().Split(' ')[1]);
-                        MySqlOperations.Select_DataGridView(MySqlQueries.Select_Dogovory, dataGridView1);
-                        identify = "dogovory";
-                        dataGridView1.Columns[0].Visible = false;
+                        if (MessageBox.Show("Договор " + s.ToString() + " прекращает своё действие. Желаете его закрыть и оформить акт осмотра авто?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        {
+                            MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identify_Dogovory, s.ToString().Split(' ')[1]);
+                            MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identify_Avtopark, s.ToString().Split(' ')[1]);
+                            MySqlOperations.Select_DataGridView(MySqlQueries.Select_Dogovory, dataGridView1);
+                            dataGridView1.Columns[0].Visible = false;
+                            Acts acts = new Acts(MySqlOperations, MySqlQueries);
+                            acts.button1.Visible = true;
+                            acts.button3.Visible = false;
+                            acts.AcceptButton = acts.button1;
+                            acts.comboBox1.SelectedItem = acts.comboBox1.Items[1];
+                            MySqlOperations.Search_In_ComboBox(s.ToString(), acts.comboBox2);
+                            acts.comboBox1.Enabled = false;
+                            acts.comboBox2.Enabled = false;
+                            acts.comboBox3.Enabled = false;
+                            acts.comboBox4.Enabled = false;
+                            acts.Acts_Closed += актыToolStripMenuItem_Click;
+                            acts.Owner = this;
+                            acts.Show();
+                            Count++;
+                        }
+                        else
+                        {
+                            MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_K_Date_Dogovory, s.ToString().Split(' ')[1]);
+                            MySqlOperations.Select_DataGridView(MySqlQueries.Select_Dogovory, dataGridView1);
+                            identify = "dogovory";
+                            dataGridView1.Columns[0].Visible = false;
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не обнаружена база данных или сервер не активен." + '\n' + "Обратитесь к системному администратору.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
             }
         }
 
@@ -140,6 +179,50 @@ namespace Edvin.Drive
         {
             MySqlOperations.CloseConnection();
             Application.Exit();
+        }
+
+        public void Filter()
+        {
+            if (identify == "doljnosti")
+            {
+                MySqlOperations.Select_DataGridView(MySqlQueries.Select_Doljnosti_Filter, dataGridView1, null, "%" + toolStripTextBox1.Text + "%");
+                dataGridView1.Columns[0].Visible = false;
+            }
+            else if (identify == "price")
+            {
+                MySqlOperations.Select_DataGridView(MySqlQueries.Select_Price_Filter, dataGridView1, null, "%" + toolStripTextBox1.Text + "%");
+                dataGridView1.Columns[0].Visible = false;
+            }
+            else if (identify == "avtopark")
+            {
+                MySqlOperations.Select_DataGridView(MySqlQueries.Select_Avtopark_Filter, dataGridView1, null, "%" + toolStripTextBox1.Text + "%");
+                dataGridView1.Columns[0].Visible = false;
+            }
+            else if (identify == "sotrudniki")
+            {
+                MySqlOperations.Select_DataGridView(MySqlQueries.Select_Sotrudniki_Filter, dataGridView1, null, "%" + toolStripTextBox1.Text + "%");
+                dataGridView1.Columns[0].Visible = false;
+            }
+            else if (identify == "clienty")
+            {
+                MySqlOperations.Select_DataGridView(MySqlQueries.Select_Clienty_Filter, dataGridView1, null, "%" + toolStripTextBox1.Text + "%");
+                dataGridView1.Columns[0].Visible = false;
+            }
+            else if (identify == "prava")
+            {
+                MySqlOperations.Select_DataGridView(MySqlQueries.Select_Prava_Filter, dataGridView1, null, "%" + toolStripTextBox1.Text + "%");
+                dataGridView1.Columns[0].Visible = false;
+            }
+            else if (identify == "dogovory")
+            {
+                MySqlOperations.Select_DataGridView(MySqlQueries.Select_Dogovory_Filter, dataGridView1, null, "%" + toolStripTextBox1.Text + "%");
+                dataGridView1.Columns[0].Visible = false;
+            }
+            else if (identify == "acts")
+            {
+                MySqlOperations.Select_DataGridView(MySqlQueries.Select_Acts_Filter, dataGridView1, null, "%" + toolStripTextBox1.Text + "%");
+                dataGridView1.Columns[0].Visible = false;
+            }
         }
 
         public async void Insert_String()
@@ -193,6 +276,23 @@ namespace Edvin.Drive
                 clienty.Clienty_Closed += клиентыToolStripMenuItem_Click;
                 clienty.Owner = this;
                 clienty.Show();
+                await MySqlOperations.GetTaskFromEvent(clienty, "FormClosed");
+                if (clienty.DialogResult == DialogResult.Yes)
+                {
+                    Prava prava = new Prava(MySqlOperations, MySqlQueries);
+                    prava.button1.Visible = true;
+                    prava.button3.Visible = false;
+                    prava.AcceptButton = prava.button1;
+                    prava.comboBox3.Items.Clear();
+                    MySqlOperations.Select_ComboBox(MySqlQueries.Select_Clienty_ComboBoxIsNull, prava.comboBox3);
+                    MySqlOperations.Search_In_ComboBox(dataGridView1.SelectedRows[0].Cells[1].Value.ToString(), prava.comboBox3);
+                    if (prava.comboBox3.Items.Count > 0)
+                    {
+                        prava.Prava_Closed += клиентыToolStripMenuItem_Click;
+                        prava.Owner = this;
+                        prava.Show();
+                    }
+                }
             }
             else if (identify == "prava")
             {
@@ -209,7 +309,10 @@ namespace Edvin.Drive
                     prava.Show();
                 }
                 else
+                {
                     MessageBox.Show("Для всех записей клиентов уже существуют записи в данной таблице.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    prava.Dispose();
+                }
             }
             else if (identify == "dogovory")
             {
@@ -217,6 +320,9 @@ namespace Edvin.Drive
                 dogovory.button1.Visible = true;
                 dogovory.button3.Visible = false;
                 dogovory.AcceptButton = dogovory.button1;
+                dogovory.dateTimePicker1.Value = DateTime.Now;
+                dogovory.dateTimePicker1.MinDate = dogovory.dateTimePicker1.Value;
+                dogovory.dateTimePicker1.MaxDate = dogovory.dateTimePicker1.Value;
                 dogovory.Dogovory_Closed += договорыToolStripMenuItem_Click;
                 dogovory.Owner = this;
                 dogovory.Show();
@@ -357,6 +463,8 @@ namespace Edvin.Drive
                         dogovory.comboBox3.Enabled = false;
                         dogovory.dateTimePicker1.Enabled = false;
                         dogovory.dateTimePicker1.Value = DateTime.Parse(dataGridView1.SelectedRows[i].Cells[5].Value.ToString());
+                        dogovory.dateTimePicker1.MinDate = dogovory.dateTimePicker1.Value;
+                        dogovory.dateTimePicker1.MaxDate = dogovory.dateTimePicker1.Value;
                         dogovory.dateTimePicker2.Value = DateTime.Parse(dataGridView1.SelectedRows[i].Cells[6].Value.ToString());
                         dogovory.Summa();
                         dogovory.AcceptButton = dogovory.button3;
@@ -385,22 +493,6 @@ namespace Edvin.Drive
                     acts.Show();
                 }
             }
-        }
-
-        private void StringToBool(int i, Prava prava)
-        {
-            if (dataGridView1.SelectedRows[i].Cells[3].Value.ToString() == "Есть")
-                prava.checkBox1.Checked = true;
-            if (dataGridView1.SelectedRows[i].Cells[4].Value.ToString() == "Есть")
-                prava.checkBox2.Checked = true;
-            if (dataGridView1.SelectedRows[i].Cells[5].Value.ToString() == "Есть")
-                prava.checkBox3.Checked = true;
-            if (dataGridView1.SelectedRows[i].Cells[6].Value.ToString() == "Есть")
-                prava.checkBox4.Checked = true;
-            if (dataGridView1.SelectedRows[i].Cells[7].Value.ToString() == "Есть")
-                prava.checkBox5.Checked = true;
-            if (dataGridView1.SelectedRows[i].Cells[8].Value.ToString() == "Есть")
-                prava.checkBox6.Checked = true;
         }
 
         private void Delete_String()
@@ -452,7 +544,10 @@ namespace Edvin.Drive
                 else if (identify == "dogovory")
                 {
                     for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
+                    {
                         MySqlOperations.Insert_Update_Delete(MySqlQueries.Delete_Dogovory, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
+                        MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identify_Avtopark, dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
+                    }
                     MySqlOperations.Select_DataGridView(MySqlQueries.Select_Dogovory, dataGridView1);
                     dataGridView1.Columns[0].Visible = false;
                 }
@@ -514,17 +609,17 @@ namespace Edvin.Drive
                                 prava.Owner = this;
                                 prava.Show();
                             }
-                            else
-                                MessageBox.Show("Для всех записей клиентов уже существуют записи в данной таблице.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
+                        } 
                     }
+                    else
+                        MessageBox.Show("Для данного клиента уже существует запись о его вод. удостоверении.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else if (identify == "dogovory")
                 {
                     if (MessageBox.Show("Хотите закрыть данный договор?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identify_Dogovory, dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
-                        MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identyfy_Avtopark, dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
+                        MySqlOperations.Insert_Update_Delete(MySqlQueries.Update_Identify_Avtopark, dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
                         if (MySqlOperations.Select_Text(MySqlQueries.Select_Exists_ActPriema, dataGridView1.SelectedRows[0].Cells[0].Value.ToString()) == "0")
                         {
                             if (MessageBox.Show("Хотите составить акт осмотра?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -560,16 +655,53 @@ namespace Edvin.Drive
 
         private void фильтрToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            Filter();
         }
 
         private void toolStripTextBox1_TextChanged(object sender, EventArgs e)
         {
             if (toolStripTextBox1.Text == "")
             {
-                dataGridView1.ClearSelection();
-                foreach(DataGridViewRow row in dataGridView1.Rows)
-                    row.Visible = true;
+                if (identify == "doljnosti")
+                {
+                    MySqlOperations.Select_DataGridView(MySqlQueries.Select_Doljnosti, dataGridView1);
+                    dataGridView1.Columns[0].Visible = false;
+                }
+                else if (identify == "price")
+                {
+                    MySqlOperations.Select_DataGridView(MySqlQueries.Select_Price, dataGridView1);
+                    dataGridView1.Columns[0].Visible = false;
+                }
+                else if (identify == "avtopark")
+                {
+                    MySqlOperations.Select_DataGridView(MySqlQueries.Select_Avtopark, dataGridView1);
+                    dataGridView1.Columns[0].Visible = false;
+                }
+                else if (identify == "sotrudniki")
+                {
+                    MySqlOperations.Select_DataGridView(MySqlQueries.Select_Sotrudniki, dataGridView1);
+                    dataGridView1.Columns[0].Visible = false;
+                }
+                else if (identify == "clienty")
+                {
+                    MySqlOperations.Select_DataGridView(MySqlQueries.Select_Clienty, dataGridView1);
+                    dataGridView1.Columns[0].Visible = false;
+                }
+                else if (identify == "prava")
+                {
+                    MySqlOperations.Select_DataGridView(MySqlQueries.Select_Prava, dataGridView1);
+                    dataGridView1.Columns[0].Visible = false;
+                }
+                else if (identify == "dogovory")
+                {
+                    MySqlOperations.Select_DataGridView(MySqlQueries.Select_Dogovory, dataGridView1);
+                    dataGridView1.Columns[0].Visible = false;
+                }
+                else if (identify == "acts")
+                {
+                    MySqlOperations.Select_DataGridView(MySqlQueries.Select_Acts, dataGridView1);
+                    dataGridView1.Columns[0].Visible = false;
+                }
             }
         }
 
@@ -605,6 +737,56 @@ namespace Edvin.Drive
                 menuStrip1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8);
                 contextMenuStrip1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8);
             }
+        }
+
+        private void заНеделюToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataTable dataTable = MySqlOperations.Select_DataTable(MySqlQueries.Select_Statistics_Week, null, null);
+            Statistics statistics = new Statistics();
+            statistics.Text = "Статистика " + заНеделюToolStripMenuItem.Text.ToLower();
+            statistics.chart1.Series[0].Name = "Количество аренд";
+            statistics.chart1.Series[0].Points.Clear();
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                statistics.chart1.Series[0].Points.AddXY(dataTable.Rows[i][0].ToString(), int.Parse(dataTable.Rows[i][1].ToString()));
+            }
+            statistics.Show();
+        }
+
+        private void заМесяцToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataTable dataTable = MySqlOperations.Select_DataTable(MySqlQueries.Select_Statistics_Month, null, null);
+            Statistics statistics = new Statistics();
+            statistics.Text = "Статистика " + заНеделюToolStripMenuItem.Text.ToLower();
+            statistics.chart1.Series[0].Name = "Количество аренд";
+            statistics.chart1.Series[0].Points.Clear();
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                statistics.chart1.Series[0].Points.AddXY(dataTable.Rows[i][0].ToString(), int.Parse(dataTable.Rows[i][1].ToString()));
+            }
+            statistics.Show();
+        }
+
+        private void заГодToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataTable dataTable = MySqlOperations.Select_DataTable(MySqlQueries.Select_Statistics_Year, null, null);
+            Statistics statistics = new Statistics();
+            statistics.Text = "Статистика " + заНеделюToolStripMenuItem.Text.ToLower();
+            statistics.chart1.Series[0].Name = "Количество аренд";
+            statistics.chart1.Series[0].Points.Clear();
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                statistics.chart1.Series[0].Points.AddXY(dataTable.Rows[i][0].ToString(), int.Parse(dataTable.Rows[i][1].ToString()));
+            }
+            statistics.Show();
+        }
+
+        private void опрограммеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show($@"Программа Edvin.Drive разработана по индивидуальному заданию на курсовой проект Базы Данных и СУБД.
+Программа позволяет осуществлять функции добавления, удаления, редактирования записей таблиц. Предусмотрен вывод на печать следующих докуметов: Договор на аренду, Акты осмотра при сдачи (приеме) в(из) аренду(-ы).
+Также программа имеет функцию построения статистических графиков за выбранных период. Предусмотренны проверки нежелательных действий пользователя, а также триггеры для таблиц базы данных.
+Программу разработал учащийся группы ПО-41 Шишков Андрей Алексеевич.");
         }
     }
 }

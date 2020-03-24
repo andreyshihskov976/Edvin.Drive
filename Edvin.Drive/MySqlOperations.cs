@@ -3,6 +3,7 @@ using Microsoft.Office.Interop.Word;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Collections;
@@ -11,6 +12,7 @@ using ExcelApplication = Microsoft.Office.Interop.Excel.Application;
 using WordApplication = Microsoft.Office.Interop.Word.Application;
 using System.Threading.Tasks;
 using System.Reflection;
+using DataTable = System.Data.DataTable;
 
 namespace Edvin.Drive
 {
@@ -64,7 +66,19 @@ namespace Edvin.Drive
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        public void Select_ComboBox(string query, ComboBox comboBox, string ID = null, object Value1 = null)
+
+        public DataTable Select_DataTable(string query, string ID = null, string Value1 = null)
+        {
+            DataTable dataTable = new DataTable();
+            MySqlCommand sqlCommand = new MySqlCommand(query, mySqlConnection);
+            sqlCommand.Parameters.AddWithValue("ID", ID);
+            sqlCommand.Parameters.AddWithValue("Value1", Value1);
+            MySqlDataAdapter dataAdapter = new MySqlDataAdapter(sqlCommand);
+            dataAdapter.Fill(dataTable);
+            return dataTable;
+        }
+
+        public void Select_ComboBox(string query, ComboBox comboBox)
         {
             try
             {
@@ -93,13 +107,20 @@ namespace Edvin.Drive
 
         public void Search_In_ComboBox(string s, ComboBox comboBox)
         {
+            bool result = false;
             for (int i = 0; i < comboBox.Items.Count; i++)
             {
                 if (comboBox.Items[i].ToString().Contains(s))
                 {
                     comboBox.SelectedIndex = i;
+                    result = true;
                     break;
                 }
+            }
+            if (!result)
+            {
+                comboBox.Items.Add(s);
+                comboBox.SelectedItem = s;
             }
         }
 

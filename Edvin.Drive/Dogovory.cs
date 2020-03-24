@@ -24,7 +24,7 @@ namespace Edvin.Drive
             MySqlOperations.Select_ComboBox(MySqlQueries.Select_Sotrudniki_ComboBox, comboBox1);
             MySqlOperations.Select_ComboBox(MySqlQueries.Select_Avtopark_ComboBox, comboBox3);
             MySqlOperations.Select_ComboBox(MySqlQueries.Select_Clienty_ComboBox, comboBox2);
-            dateTimePicker1.Value = DateTime.Now;
+            //dateTimePicker1.Value = DateTime.Now;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -85,18 +85,47 @@ namespace Edvin.Drive
 
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e) => Summa();
 
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e) => dateTimePicker2.Value = dateTimePicker1.Value.AddDays(1);
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                dateTimePicker2.Value = dateTimePicker1.Value.AddDays(1);
+                dateTimePicker2.MinDate = dateTimePicker2.Value;
+            }
+            catch (Exception) { }
+        }
+
 
         private void dateTimePicker2_ValueChanged(object sender, EventArgs e) => Summa();
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string output = string.Empty;
-            foreach (string Categoriya in MySqlOperations.Select_Text(MySqlQueries.Select_Prava_Clienty,MySqlOperations.Select_Text(MySqlQueries.Select_Clienty_ID,null,comboBox2.Text)).Split(' '))
+            if (MySqlOperations.Select_Text(MySqlQueries.Select_Prava_Exists, MySqlOperations.Select_Text(MySqlQueries.Select_Clienty_ID,null,comboBox2.Text)) != "0") 
             {
-                output += "'" + Categoriya + "',";
+                string output = string.Empty;
+                foreach (string Categoriya in MySqlOperations.Select_Text(MySqlQueries.Select_Prava_Clienty, MySqlOperations.Select_Text(MySqlQueries.Select_Clienty_ID, null, comboBox2.Text)).Split(' '))
+                {
+                    output += "'" + Categoriya + "',";
+                }
+                MySqlOperations.Select_ComboBox(MySqlQueries.Select_Avtopark_ComboBox1 + output.Remove(output.Length - 1, 1) + ");", comboBox3);
+                if (comboBox3.Items.Count < 1)
+                {
+                    button1.Enabled = false;
+                    button3.Enabled = false;
+                    MessageBox.Show("На данный момент нет свободных автомобилей для данного клиента.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    button1.Enabled = true;
+                    button3.Enabled = true;
+                } 
             }
-            MySqlOperations.Select_ComboBox(MySqlQueries.Select_Avtopark_ComboBox1 + output.Remove(output.Length - 1, 1) + ");", comboBox3 );
+            else
+            {
+                button1.Enabled = false;
+                button3.Enabled = false;
+                MessageBox.Show("Для данного клиента не заполнены сведения о вод. удостоверении."+'\n'+"Пожалуйста заполните внесите сведения, прежде чем заключать договор.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 }

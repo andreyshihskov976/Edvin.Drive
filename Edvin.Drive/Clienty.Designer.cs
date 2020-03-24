@@ -54,7 +54,7 @@
             this.maskedTextBox1.Mask = "+375(00)000-00-00";
             this.maskedTextBox1.Name = "maskedTextBox1";
             this.maskedTextBox1.Size = new System.Drawing.Size(215, 26);
-            this.maskedTextBox1.TabIndex = 47;
+            this.maskedTextBox1.TabIndex = 4;
             // 
             // label4
             // 
@@ -82,7 +82,7 @@
             this.textBox3.Location = new System.Drawing.Point(224, 64);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(215, 26);
-            this.textBox3.TabIndex = 42;
+            this.textBox3.TabIndex = 3;
             // 
             // textBox2
             // 
@@ -90,7 +90,7 @@
             this.textBox2.Location = new System.Drawing.Point(224, 32);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(215, 26);
-            this.textBox2.TabIndex = 41;
+            this.textBox2.TabIndex = 2;
             // 
             // label2
             // 
@@ -108,7 +108,7 @@
             this.button3.Location = new System.Drawing.Point(3, 224);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(215, 26);
-            this.button3.TabIndex = 39;
+            this.button3.TabIndex = 9;
             this.button3.Text = "Редактировать";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -120,7 +120,7 @@
             this.button2.Location = new System.Drawing.Point(224, 224);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(215, 26);
-            this.button2.TabIndex = 38;
+            this.button2.TabIndex = 10;
             this.button2.Text = "Отмена";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -131,7 +131,7 @@
             this.button1.Location = new System.Drawing.Point(3, 224);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(215, 26);
-            this.button1.TabIndex = 37;
+            this.button1.TabIndex = 8;
             this.button1.Text = "Добавить";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -142,7 +142,7 @@
             this.textBox1.Location = new System.Drawing.Point(224, 0);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(215, 26);
-            this.textBox1.TabIndex = 36;
+            this.textBox1.TabIndex = 1;
             // 
             // label1
             // 
@@ -171,7 +171,7 @@
             this.maskedTextBox3.Mask = "LL0000000";
             this.maskedTextBox3.Name = "maskedTextBox3";
             this.maskedTextBox3.Size = new System.Drawing.Size(215, 26);
-            this.maskedTextBox3.TabIndex = 52;
+            this.maskedTextBox3.TabIndex = 6;
             // 
             // label6
             // 
@@ -190,7 +190,7 @@
             this.maskedTextBox4.Mask = "0000000L000LL0";
             this.maskedTextBox4.Name = "maskedTextBox4";
             this.maskedTextBox4.Size = new System.Drawing.Size(215, 26);
-            this.maskedTextBox4.TabIndex = 54;
+            this.maskedTextBox4.TabIndex = 7;
             // 
             // label7
             // 
@@ -208,7 +208,7 @@
             this.textBox4.Location = new System.Drawing.Point(224, 128);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(215, 26);
-            this.textBox4.TabIndex = 55;
+            this.textBox4.TabIndex = 5;
             // 
             // Clienty
             // 

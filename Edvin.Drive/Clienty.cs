@@ -21,6 +21,10 @@ namespace Edvin.Drive
             if (textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "" && maskedTextBox1.Text.Length == 17 && maskedTextBox3.Text.Length == 9 && maskedTextBox4.Text.Length == 14)
             {
                 MySqlOperations.Insert_Update_Delete(MySqlQueries.Insert_Clienty, null, textBox1.Text, textBox2.Text, textBox3.Text, maskedTextBox1.Text, textBox4.Text, maskedTextBox3.Text, maskedTextBox4.Text);
+                if (MessageBox.Show("Пожалуйста добавьте сведения о водительском удостоверении клиента.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                    this.DialogResult = DialogResult.Yes;
+                else
+                    this.DialogResult = DialogResult.No;
                 this.Close();
             }
             else

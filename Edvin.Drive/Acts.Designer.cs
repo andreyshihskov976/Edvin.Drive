@@ -53,7 +53,7 @@
             this.comboBox1.Location = new System.Drawing.Point(224, 0);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(660, 28);
-            this.comboBox1.TabIndex = 25;
+            this.comboBox1.TabIndex = 1;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectionChangeCommitted);
             // 
             // label1
@@ -72,7 +72,7 @@
             this.button3.Location = new System.Drawing.Point(4, 348);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(215, 26);
-            this.button3.TabIndex = 28;
+            this.button3.TabIndex = 7;
             this.button3.Text = "Редактировать";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -84,7 +84,7 @@
             this.button2.Location = new System.Drawing.Point(225, 348);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(215, 26);
-            this.button2.TabIndex = 27;
+            this.button2.TabIndex = 8;
             this.button2.Text = "Отмена";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -95,7 +95,7 @@
             this.button1.Location = new System.Drawing.Point(4, 348);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(215, 26);
-            this.button1.TabIndex = 26;
+            this.button1.TabIndex = 6;
             this.button1.Text = "Добавить";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -108,8 +108,8 @@
             this.comboBox2.Location = new System.Drawing.Point(224, 34);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(215, 28);
-            this.comboBox2.TabIndex = 32;
-            this.comboBox2.SelectionChangeCommitted += new System.EventHandler(this.comboBox2_SelectionChangeCommitted);
+            this.comboBox2.TabIndex = 2;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectionChangeCommitted);
             // 
             // label3
             // 
@@ -129,7 +129,7 @@
             this.comboBox3.Location = new System.Drawing.Point(224, 68);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(386, 28);
-            this.comboBox3.TabIndex = 34;
+            this.comboBox3.TabIndex = 4;
             // 
             // label4
             // 
@@ -150,7 +150,7 @@
             this.comboBox4.Location = new System.Drawing.Point(669, 34);
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(215, 28);
-            this.comboBox4.TabIndex = 36;
+            this.comboBox4.TabIndex = 3;
             // 
             // label5
             // 
@@ -169,7 +169,7 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(880, 240);
-            this.textBox1.TabIndex = 37;
+            this.textBox1.TabIndex = 5;
             // 
             // Acts
             // 
