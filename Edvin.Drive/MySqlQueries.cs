@@ -12,7 +12,7 @@ clienty.Telephone AS 'Контактный телефон', clienty.Email AS 'А
 clienty.Nom_Pass AS 'Номер паспорта', clienty.Ident_Nom AS 'Идентификационный номер'
 FROM clienty;";
 
-        public string Select_Dogovory = $@"SELECT dogovory.ID_Dogovora, dogovory.Date AS 'Дата заключения', CONCAT(sotrudniki.Familiya,' ',sotrudniki.Imya,' ',sotrudniki.Otchestvo) AS 'Ф.И.О. Сотрудника',
+        public string Select_Dogovory = $@"SELECT dogovory.ID_Dogovora  AS '№ Договора', dogovory.Date AS 'Дата заключения', CONCAT(sotrudniki.Familiya,' ',sotrudniki.Imya,' ',sotrudniki.Otchestvo) AS 'Ф.И.О. Сотрудника',
 CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo) AS 'Ф.И.О. Клиента',
 CONCAT(avtopark.Marka,' ',avtopark.Model,' ',avtopark.Gos_Znak) AS 'Автомобиль',
 dogovory.N_Arendy AS 'Дата начала аренды', dogovory.K_Arendy AS 'Дата окончания аренды',dogovory.Summa AS 'Сумма',
@@ -21,21 +21,19 @@ FROM dogovory INNER JOIN avtopark ON dogovory.ID_Avto = avtopark.ID_Avto
 INNER JOIN clienty ON clienty.ID_Clienta = dogovory.ID_Clienta
 INNER JOIN sotrudniki ON sotrudniki.ID_Sotrudnika = dogovory.ID_Sotrudnika;";
 
-        public string Select_Dogovory_Deistv = $@"SELECT dogovory.ID_Dogovora, dogovory.Date AS 'Дата заключения', CONCAT(sotrudniki.Familiya,' ',sotrudniki.Imya,' ',sotrudniki.Otchestvo) AS 'Ф.И.О. Сотрудника',
+        public string Select_Dogovory_Deistv = $@"SELECT dogovory.ID_Dogovora  AS '№ Договора', dogovory.Date AS 'Дата заключения', CONCAT(sotrudniki.Familiya,' ',sotrudniki.Imya,' ',sotrudniki.Otchestvo) AS 'Ф.И.О. Сотрудника',
 CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo) AS 'Ф.И.О. Клиента',
 CONCAT(avtopark.Marka,' ',avtopark.Model,' ',avtopark.Gos_Znak) AS 'Автомобиль',
-dogovory.N_Arendy AS 'Дата начала аренды', dogovory.K_Arendy AS 'Дата окончания аренды',dogovory.Summa AS 'Сумма',
-dogovory.Identify AS 'Идентификатор'
+dogovory.N_Arendy AS 'Дата начала аренды', dogovory.K_Arendy AS 'Дата окончания аренды',dogovory.Summa AS 'Сумма'
 FROM dogovory INNER JOIN avtopark ON dogovory.ID_Avto = avtopark.ID_Avto
 INNER JOIN clienty ON clienty.ID_Clienta = dogovory.ID_Clienta
 INNER JOIN sotrudniki ON sotrudniki.ID_Sotrudnika = dogovory.ID_Sotrudnika
 WHERE dogovory.Identify = 'Действительный';";
 
-        public string Select_Dogovory_Nedeistv = $@"SELECT dogovory.ID_Dogovora, dogovory.Date AS 'Дата заключения', CONCAT(sotrudniki.Familiya,' ',sotrudniki.Imya,' ',sotrudniki.Otchestvo) AS 'Ф.И.О. Сотрудника',
+        public string Select_Dogovory_Nedeistv = $@"SELECT dogovory.ID_Dogovora  AS '№ Договора', dogovory.Date AS 'Дата заключения', CONCAT(sotrudniki.Familiya,' ',sotrudniki.Imya,' ',sotrudniki.Otchestvo) AS 'Ф.И.О. Сотрудника',
 CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo) AS 'Ф.И.О. Клиента',
 CONCAT(avtopark.Marka,' ',avtopark.Model,' ',avtopark.Gos_Znak) AS 'Автомобиль',
-dogovory.N_Arendy AS 'Дата начала аренды', dogovory.K_Arendy AS 'Дата окончания аренды',dogovory.Summa AS 'Сумма',
-dogovory.Identify AS 'Идентификатор'
+dogovory.N_Arendy AS 'Дата начала аренды', dogovory.K_Arendy AS 'Дата окончания аренды',dogovory.Summa AS 'Сумма'
 FROM dogovory INNER JOIN avtopark ON dogovory.ID_Avto = avtopark.ID_Avto
 INNER JOIN clienty ON clienty.ID_Clienta = dogovory.ID_Clienta
 INNER JOIN sotrudniki ON sotrudniki.ID_Sotrudnika = dogovory.ID_Sotrudnika
@@ -92,7 +90,7 @@ WHERE clienty.ID_Clienta LIKE @Value1 OR CONCAT(clienty.Familiya, ' ', clienty.I
 clienty.Telephone LIKE @Value1 OR clienty.Email LIKE @Value1 OR 
 clienty.Nom_Pass LIKE @Value1 OR clienty.Ident_Nom LIKE @Value1;";
 
-        public string Select_Dogovory_Filter = $@"SELECT dogovory.ID_Dogovora, dogovory.Date AS 'Дата заключения', CONCAT(sotrudniki.Familiya,' ',sotrudniki.Imya,' ',sotrudniki.Otchestvo) AS 'Ф.И.О. Сотрудника',
+        public string Select_Dogovory_Filter = $@"SELECT dogovory.ID_Dogovora  AS '№ Договора', dogovory.Date AS 'Дата заключения', CONCAT(sotrudniki.Familiya,' ',sotrudniki.Imya,' ',sotrudniki.Otchestvo) AS 'Ф.И.О. Сотрудника',
 CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo) AS 'Ф.И.О. Клиента',
 CONCAT(avtopark.Marka,' ',avtopark.Model,' ',avtopark.Gos_Znak) AS 'Автомобиль',
 dogovory.N_Arendy AS 'Дата начала аренды', dogovory.K_Arendy AS 'Дата окончания аренды',dogovory.Summa AS 'Сумма',
@@ -186,7 +184,8 @@ WHERE dogovory.Identify = 'Не действительный';";
         public string Select_Prava_Exists = $@"SELECT EXISTS(SELECT * FROM prava WHERE prava.ID_Clienta = @ID);";
 
         public string Select_Exists_Nedeistv_Dogovory = $@"SELECT EXISTS(SELECT * 
-FROM dogovory WHERE dogovory.K_Arendy < CURDATE() AND dogovory.Identify = 'Действительный');";
+FROM dogovory 
+WHERE (dogovory.K_Arendy BETWEEN DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND CURDATE()) AND dogovory.Identify = 'Действительный');";
 
         public string Select_Exists_ActSdachi = $@"SELECT EXISTS(SELECT * FROM acts WHERE acts.ID_Dogovora = @ID AND acts.Name = 'Акт осмотра автомобиля при сдаче в аренду');";
 
@@ -194,7 +193,7 @@ FROM dogovory WHERE dogovory.K_Arendy < CURDATE() AND dogovory.Identify = 'Де�
 
         public string Select_List_Nedeistv_Dogovory = $@"SET lc_time_names = 'ru_RU';
 SELECT CONCAT('№ ',dogovory.ID_Dogovora,' от ',DATE_FORMAT(dogovory.Date,'%d %M %Y')) 
-FROM dogovory WHERE dogovory.K_Arendy < CURDATE() AND dogovory.Identify = 'Действительный';";
+FROM dogovory WHERE dogovory.K_Arendy <= CURDATE() AND dogovory.Identify = 'Действительный';";
 
         public string Select_Stoimost = $@"SELECT price.Stoimost-price.Skidka/100 FROM price INNER JOIN avtopark ON avtopark.ID_Price = price.ID_Price WHERE avtopark.ID_Avto = @ID;";
 
@@ -263,6 +262,45 @@ GROUP BY avtopark.ID_Avto;";
 FROM dogovory LEFT JOIN avtopark ON dogovory.ID_Avto = avtopark.ID_Avto
 WHERE dogovory.Date BETWEEN DATE_FORMAT(CONCAT(Year(CURDATE()),'-01-01'),'%Y-%m-%d') AND DATE_FORMAT(CONCAT(YEAR(CURDATE()),'-12-31'),'%Y-%m-%d')
 GROUP BY avtopark.ID_Avto;";
+
+        public string Select_Statistics_Pribyl_Year = $@"SELECT 
+if (DATE_FORMAT(dogovory.Date,'%m')=01,'Январь',
+if (DATE_FORMAT(dogovory.Date,'%m')=02,'Февраль',
+if (DATE_FORMAT(dogovory.Date,'%m')=03,'Март',
+if (DATE_FORMAT(dogovory.Date,'%m')=04,'Апрель',
+if (DATE_FORMAT(dogovory.Date,'%m')=05,'Май',
+if (DATE_FORMAT(dogovory.Date,'%m')=06,'Июнь',
+if (DATE_FORMAT(dogovory.Date,'%m')=07,'Июль',
+if (DATE_FORMAT(dogovory.Date,'%m')=08,'Август',
+if (DATE_FORMAT(dogovory.Date,'%m')=09,'Сентярь',
+if (DATE_FORMAT(dogovory.Date,'%m')=10,'Октябрь',
+if (DATE_FORMAT(dogovory.Date,'%m')=11,'Ноябрь',
+if (DATE_FORMAT(dogovory.Date,'%m')=12,'Декабрь','')
+))))))))))), 
+SUM(dogovory.Summa) FROM dogovory
+WHERE DATE_FORMAT(dogovory.Date, '%Y') = DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY DATE_FORMAT(dogovory.Date, '%m');";
+
+        public string Select_Reestr_Dogovorov = $@"SET lc_time_names = 'ru_RU';
+SELECT CONCAT('№ ',dogovory.ID_Dogovora,' от ', Date_Format(dogovory.Date, '%d %M %Y')) AS 'Договор',
+CONCAT(sotrudniki.Familiya,' ', sotrudniki.Imya, ' ', sotrudniki.Otchestvo) AS 'Оформил (Ф.И.О. сотрудника)',
+CONCAT(avtopark.Marka, ' ', avtopark.Model, ' ', avtopark.Gos_Znak) AS 'Автомобиль',
+dogovory.Summa AS 'Сумма договора', dogovory.Identify AS 'Идентификатор'
+FROM dogovory INNER JOIN sotrudniki ON dogovory.ID_Sotrudnika = sotrudniki.ID_Sotrudnika
+INNER JOIN avtopark ON dogovory.ID_Avto = avtopark.ID_Avto
+WHERE dogovory.Date BETWEEN @Value1 AND @Value2;";
+
+        public string Select_Okanch_Dogovory = $@"SELECT CONCAT ('№ ',dogovory.ID_Dogovora,' от ', DATE_FORMAT(dogovory.Date,'%d %M %Y')) AS 'Договор', 
+CONCAT(avtopark.Marka,' ',avtopark.Model,' ',avtopark.Gos_Znak) AS 'Автомобиль', 
+DATE_FORMAT(dogovory.K_Arendy,'%d.%m.%Y') AS 'Дата окончания аренды',
+CONCAT(clienty.Familiya, ' ', clienty.Imya, ' ', clienty.Otchestvo) AS 'Ф.И.О. Клиента',
+clienty.Telephone AS 'Контактный телефон',
+clienty.Email AS 'Электронная почта'
+FROM dogovory INNER JOIN avtopark ON dogovory.ID_Avto = avtopark.ID_Avto
+INNER JOIN clienty ON clienty.ID_Clienta = dogovory.ID_Clienta
+INNER JOIN sotrudniki ON sotrudniki.ID_Sotrudnika = dogovory.ID_Sotrudnika
+WHERE (dogovory.K_Arendy BETWEEN DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND CURDATE()) 
+AND dogovory.Identify = 'Действительный';";
         //Select
 
         //Insert

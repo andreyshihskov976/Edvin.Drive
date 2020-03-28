@@ -13,6 +13,7 @@ using WordApplication = Microsoft.Office.Interop.Word.Application;
 using System.Threading.Tasks;
 using System.Reflection;
 using DataTable = System.Data.DataTable;
+using XlLineStyle = Microsoft.Office.Interop.Excel.XlLineStyle;
 
 namespace Edvin.Drive
 {
@@ -67,12 +68,13 @@ namespace Edvin.Drive
             }
         }
 
-        public DataTable Select_DataTable(string query, string ID = null, string Value1 = null)
+        public DataTable Select_DataTable(string query, string ID = null, string Value1 = null, string Value2 = null)
         {
             DataTable dataTable = new DataTable();
             MySqlCommand sqlCommand = new MySqlCommand(query, mySqlConnection);
             sqlCommand.Parameters.AddWithValue("ID", ID);
             sqlCommand.Parameters.AddWithValue("Value1", Value1);
+            sqlCommand.Parameters.AddWithValue("Value2", Value2);
             MySqlDataAdapter dataAdapter = new MySqlDataAdapter(sqlCommand);
             dataAdapter.Fill(dataTable);
             return dataTable;
@@ -271,6 +273,8 @@ namespace Edvin.Drive
             Document Document = null;
             string output = null;
             string fileName = null;
+            saveFileDialog.DefaultExt = "Документ Word|*.docx";
+            saveFileDialog.Filter = "Документ Word|*.docx|Документ Word 93-2003|*.doc|PDF|*.pdf";
             saveFileDialog.Title = "Сохранить договор как";
             output = Select_Text(MySqlQueries.Select_Print_Dogovory, ID);
             saveFileDialog.FileName = "Договор " + output.Split(';')[0];
@@ -327,6 +331,8 @@ namespace Edvin.Drive
             Document Document = null;
             string output = null;
             string fileName = null;
+            saveFileDialog.DefaultExt = "Документ Word|*.docx";
+            saveFileDialog.Filter = "Документ Word|*.docx|Документ Word 93-2003|*.doc|PDF|*.pdf";
             saveFileDialog.Title = "Сохранить акт как";
             output = Select_Text(MySqlQueries.Select_Print_Acts, ID);
             saveFileDialog.FileName = output.Split(';')[0];
@@ -362,6 +368,126 @@ namespace Edvin.Drive
                     Marshal.ReleaseComObject(Documents);
                     Marshal.ReleaseComObject(Document);
                     Marshal.ReleaseComObject(WordApp);
+                }
+            }
+        }
+
+        public void Print_Reestr(MySqlQueries mySqlQueries, DateTimePicker dateTimePicker1, DateTimePicker dateTimePicker2, SaveFileDialog saveFileDialog)
+        {
+            ExcelApplication ExcelApp = null;
+            Workbooks workbooks = null;
+            Workbook workbook = null;
+            Worksheet worksheet = null;
+            string fileName = null;
+            saveFileDialog.DefaultExt = "Книга Excel|*.xlsx";
+            saveFileDialog.Filter = "Книга Excel|*.xlsx|Книга Excel 93-2003|*.xls|PDF|*.pdf";
+            saveFileDialog.Title = "Сохранить реестр заключенных договоров как";
+            saveFileDialog.FileName = "Реестр заключенных договоров с " + dateTimePicker1.Value.ToShortDateString() + " по " + dateTimePicker2.Value.ToShortDateString();
+            saveFileDialog.InitialDirectory = Application.StartupPath + "\\Отчетность\\";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                fileName = saveFileDialog.FileName;
+                string date1 = dateTimePicker1.Value.Year.ToString() + '-' + dateTimePicker1.Value.Month.ToString() + '-' + dateTimePicker1.Value.Day.ToString();
+                string date2 = dateTimePicker2.Value.Year.ToString() + '-' + dateTimePicker2.Value.Month.ToString() + '-' + dateTimePicker2.Value.Day.ToString();
+                DataTable data = Select_DataTable(MySqlQueries.Select_Reestr_Dogovorov, null, date1, date2);
+                try
+                {
+                    ExcelApp = new ExcelApplication();
+                    workbooks = ExcelApp.Workbooks;
+                    workbook = workbooks.Open(Application.StartupPath + "\\blanks\\Reestr.xlsx");
+                    worksheet = workbook.Worksheets.get_Item(1) as Worksheet;
+                    ExcelApp.Cells[2, 1] = "c " + dateTimePicker1.Value.ToShortDateString() + " по " + dateTimePicker2.Value.ToShortDateString();
+                    int ExCol = 1;
+                    int ExRow = 5;
+                    for (int i = 0; i < data.Rows.Count - 0; i++)
+                    {
+                        ExCol = 1;
+                        for (int j = 0; j < data.Columns.Count; j++)
+                        {
+                            ExcelApp.Cells[ExRow, ExCol] = data.Rows[i][j].ToString();
+                            ExCol++;
+                        }
+                        ExRow++;
+                    }
+                    var cells = worksheet.get_Range("A5 ", "E" + (ExRow - 1).ToString());
+                    cells.Borders[XlBordersIndex.xlInsideVertical].LineStyle = XlLineStyle.xlContinuous;
+                    cells.Borders[XlBordersIndex.xlInsideHorizontal].LineStyle = XlLineStyle.xlContinuous;
+                    cells.Borders[XlBordersIndex.xlEdgeTop].LineStyle = XlLineStyle.xlContinuous;
+                    cells.Borders[XlBordersIndex.xlEdgeRight].LineStyle = XlLineStyle.xlContinuous;
+                    cells.Borders[XlBordersIndex.xlEdgeLeft].LineStyle = XlLineStyle.xlContinuous;
+                    cells.Borders[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
+                    workbook.SaveAs(fileName);
+                    ExcelApp.Visible = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    Marshal.ReleaseComObject(worksheet);
+                    Marshal.ReleaseComObject(workbook);
+                    Marshal.ReleaseComObject(workbooks);
+                    Marshal.ReleaseComObject(ExcelApp);
+                }
+            }
+        }
+
+        public void Print_Okanch_Dogovory(MySqlQueries mySqlQueries, SaveFileDialog saveFileDialog)
+        {
+            ExcelApplication ExcelApp = null;
+            Workbooks workbooks = null;
+            Workbook workbook = null;
+            Worksheet worksheet = null;
+            string fileName = null;
+            saveFileDialog.DefaultExt = "Книга Excel|*.xlsx";
+            saveFileDialog.Filter = "Книга Excel|*.xlsx|Книга Excel 93-2003|*.xls|PDF|*.pdf";
+            saveFileDialog.Title = "Сохранить список договоров как";
+            saveFileDialog.FileName = "Список договоров прекращающих своё действие от " + DateTime.Now.ToShortDateString();
+            saveFileDialog.InitialDirectory = Application.StartupPath + "\\Отчетность\\";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                fileName = saveFileDialog.FileName;
+                DataTable data = Select_DataTable(MySqlQueries.Select_Okanch_Dogovory);
+                try
+                {
+                    ExcelApp = new ExcelApplication();
+                    workbooks = ExcelApp.Workbooks;
+                    workbook = workbooks.Open(Application.StartupPath + "\\blanks\\OkanchDogovory.xlsx");
+                    worksheet = workbook.Worksheets.get_Item(1) as Worksheet;
+                    ExcelApp.Cells[2, 1] = "По состоянию на " + DateTime.Now.ToShortDateString();
+                    int ExCol = 1;
+                    int ExRow = 5;
+                    for (int i = 0; i < data.Rows.Count - 0; i++)
+                    {
+                        ExCol = 1;
+                        for (int j = 0; j < data.Columns.Count; j++)
+                        {
+                            ExcelApp.Cells[ExRow, ExCol] = data.Rows[i][j].ToString();
+                            ExCol++;
+                        }
+                        ExRow++;
+                    }
+                    var cells = worksheet.get_Range("A5 ", "F" + (ExRow - 1).ToString());
+                    cells.Borders[XlBordersIndex.xlInsideVertical].LineStyle = XlLineStyle.xlContinuous;
+                    cells.Borders[XlBordersIndex.xlInsideHorizontal].LineStyle = XlLineStyle.xlContinuous;
+                    cells.Borders[XlBordersIndex.xlEdgeTop].LineStyle = XlLineStyle.xlContinuous;
+                    cells.Borders[XlBordersIndex.xlEdgeRight].LineStyle = XlLineStyle.xlContinuous;
+                    cells.Borders[XlBordersIndex.xlEdgeLeft].LineStyle = XlLineStyle.xlContinuous;
+                    cells.Borders[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
+                    workbook.SaveAs(fileName);
+                    ExcelApp.Visible = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    Marshal.ReleaseComObject(worksheet);
+                    Marshal.ReleaseComObject(workbook);
+                    Marshal.ReleaseComObject(workbooks);
+                    Marshal.ReleaseComObject(ExcelApp);
                 }
             }
         }

@@ -24,7 +24,7 @@ namespace Edvin.Drive
             MySqlOperations.Select_ComboBox(MySqlQueries.Select_Sotrudniki_ComboBox, comboBox1);
             MySqlOperations.Select_ComboBox(MySqlQueries.Select_Avtopark_ComboBox, comboBox3);
             MySqlOperations.Select_ComboBox(MySqlQueries.Select_Clienty_ComboBox, comboBox2);
-            //dateTimePicker1.Value = DateTime.Now;
+            dateTimePicker1.Value = DateTime.Now;
         }
 
         private void button1_Click(object sender, EventArgs e)
